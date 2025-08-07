@@ -168,17 +168,52 @@
 
     <script type="module">
         // Importações do Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+        // =====================================================================================
+        // NOTA IMPORTANTE SOBRE O ERRO "Missing or insufficient permissions"
+        // =====================================================================================
+        // Este erro acontece porque as regras de segurança padrão do seu banco de dados
+        // Firestore não permitem que a aplicação leia ou escreva dados.
+        //
+        // PARA CORRIGIR:
+        // 1. Vá para o seu projeto no Firebase Console (https://console.firebase.google.com/).
+        // 2. No menu à esquerda, vá para "Build" -> "Firestore Database".
+        // 3. Clique na aba "Regras" (Rules) na parte superior.
+        // 4. Substitua todo o conteúdo pelo código abaixo e clique em "Publicar".
+        //
+        // ---- COPIE E COLE ESTAS REGRAS NO SEU FIREBASE ----
+        //
+        // rules_version = '2';
+        // service cloud.firestore {
+        //   match /databases/{database}/documents {
+        //     // Permite que qualquer usuário autenticado (incluindo anônimo)
+        //     // leia e escreva na coleção 'clientes'.
+        //     match /clientes/{clienteId} {
+        //       allow read, write: if request.auth != null;
+        //     }
+        //   }
+        // }
+        //
+        // =====================================================================================
 
         // --- Configuração e Inicialização ---
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        // CORREÇÃO: As chaves do seu projeto Firebase foram atualizadas.
+        const firebaseConfig = {
+            apiKey: "AIzaSyDPisgGzruxqnXzf9hPlb05uCN3hMozt2s",
+            authDomain: "crm-silva-tintas.firebaseapp.com",
+            projectId: "crm-silva-tintas",
+            storageBucket: "crm-silva-tintas.firebasestorage.app",
+            messagingSenderId: "37152653096",
+            appId: "1:37152653096:web:37e27f33544fdc36abda1d",
+            measurementId: "G-Y4EXZKNN2F"
+        };
+        
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        setLogLevel('debug');
 
         // --- Variáveis de Estado ---
         let currentUserId = null;
@@ -201,24 +236,15 @@
         const clientForm = document.getElementById('client-form');
 
         // --- Lógica de Autenticação e Login ---
-
-        // CORREÇÃO: A autenticação do Firebase agora é iniciada assim que a página carrega.
-        // Isso estabelece uma sessão segura em segundo plano antes do usuário tentar fazer o login.
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Sessão com o Firebase estabelecida com sucesso.
                 currentUserId = user.uid;
                 console.log("Firebase Auth está pronto. User ID:", currentUserId);
-                loginError.textContent = ""; // Limpa qualquer mensagem de erro anterior
+                loginError.textContent = ""; 
             } else {
-                // Se não houver usuário, tenta criar uma sessão anônima.
                 try {
                     loginError.textContent = "Conectando...";
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
+                    await signInAnonymously(auth);
                 } catch (error) {
                     console.error("Falha ao conectar com o Firebase:", error);
                     loginError.textContent = "Erro de conexão. Verifique a internet.";
@@ -229,7 +255,6 @@
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            // CORREÇÃO: Impede o login se a conexão com o Firebase ainda não estiver pronta.
             if (!currentUserId) {
                 loginError.textContent = 'Aguardando conexão... Tente novamente em um instante.';
                 return; 
@@ -240,8 +265,8 @@
 
             if ((username === 'Admin' && password === 'Admin') || (username === 'Vendas' && password === 'Vendas')) {
                 currentUserRole = (username === 'Admin') ? 'Admin' : 'Vendas';
-                showCrmView();      // Muda para a tela principal
-                listenToClients();  // Começa a carregar os dados dos clientes
+                showCrmView();
+                listenToClients();
             } else {
                 loginError.textContent = 'Login ou senha inválidos.';
             }
@@ -283,16 +308,20 @@
         }
 
         // --- Lógica do Firestore ---
-        const clientsCollectionRef = collection(db, `artifacts/${appId}/public/data/clientes`);
+        const clientsCollectionRef = collection(db, 'clientes');
 
         function listenToClients() {
             if (unsubscribeFromClients) {
                 unsubscribeFromClients(); 
             }
             unsubscribeFromClients = onSnapshot(clientsCollectionRef, (snapshot) => {
-                const allClients = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                const allClients = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    const criadoEm = data.criadoEm && data.criadoEm.toDate ? data.criadoEm.toDate() : new Date();
+                    return { id: doc.id, ...data, criadoEmDate: criadoEm };
+                });
                 
-                allClients.sort((a, b) => b.criadoEm.toDate() - a.criadoEm.toDate());
+                allClients.sort((a, b) => b.criadoEmDate - a.criadoEmDate);
 
                 renderClientList(allClients);
                 
@@ -301,7 +330,7 @@
                 }
             }, (error) => {
                 console.error("Erro ao buscar clientes:", error);
-                clientList.innerHTML = `<p class="text-red-500 col-span-full text-center">Erro ao carregar dados.</p>`;
+                clientList.innerHTML = `<p class="text-red-500 col-span-full text-center">Erro ao carregar dados. Verifique as regras de segurança do Firestore no seu painel Firebase.</p>`;
             });
         }
 
@@ -383,12 +412,12 @@
         });
 
         async function updateClientStatus(id, newStatus) {
-            const clientDocRef = doc(db, `artifacts/${appId}/public/data/clientes`, id);
+            const clientDocRef = doc(db, 'clientes', id);
             await updateDoc(clientDocRef, { status: newStatus });
         }
 
         async function deleteClient(id) {
-            const clientDocRef = doc(db, `artifacts/${appId}/public/data/clientes`, id);
+            const clientDocRef = doc(db, 'clientes', id);
             await deleteDoc(clientDocRef);
         }
 

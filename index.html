@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRM Prospecção - Silva Tintas</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
     <style>
@@ -71,12 +72,12 @@
         <div class="container mx-auto p-4 md:p-8">
 
             <!-- Cabeçalho -->
-            <header class="flex flex-col md:flex-row justify-between items-center mb-8">
+            <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-700">CRM Silva Tintas</h1>
                     <p id="welcome-message" class="text-gray-500">Bem-vindo!</p>
                 </div>
-                <div class="flex items-center space-x-4 mt-4 md:mt-0">
+                <div class="flex items-center space-x-4">
                     <div class="text-center">
                         <span id="client-count" class="text-2xl font-bold text-blue-600">0</span>
                         <p class="text-sm text-gray-500">Clientes</p>
@@ -89,27 +90,50 @@
                     </button>
                 </div>
             </header>
+            
+            <!-- Barra de Pesquisa -->
+            <div class="mb-8">
+                <input type="text" id="search-bar" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Pesquisar por empresa, endereço, vendedor...">
+            </div>
 
             <!-- Dashboard do Admin -->
             <section id="admin-dashboard" class="mb-8 hidden">
                 <h2 class="text-2xl font-bold text-gray-700 mb-4">Dashboard do Administrador</h2>
+                <!-- Filtros -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-white p-4 rounded-lg shadow">
+                    <div>
+                        <label for="filter-category" class="block text-sm font-medium text-gray-700">Filtrar por Categoria</label>
+                        <select id="filter-category" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <option value="todos">Todas as Categorias</option>
+                            <option value="Funilaria">Funilaria</option>
+                            <option value="Estetica Automotiva">Estética Automotiva</option>
+                            <option value="Madeireira">Madeireira</option>
+                            <option value="Industria">Indústria</option>
+                            <option value="Veiculos Pesados">Veículos Pesados</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filter-seller" class="block text-sm font-medium text-gray-700">Filtrar por Vendedor</label>
+                        <select id="filter-seller" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <option value="todos">Todos os Vendedores</option>
+                            <!-- Vendedores serão populados dinamicamente -->
+                        </select>
+                    </div>
+                </div>
+                <!-- Gráficos -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Card de Conversão -->
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="font-semibold text-gray-600">Taxa de Conversão</h3>
-                        <p id="conversion-rate" class="text-3xl font-bold text-green-600 mt-2">0%</p>
-                        <p class="text-sm text-gray-500">Clientes que se tornaram "Cliente"</p>
+                    <div class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
+                        <h3 class="font-semibold text-gray-600 mb-2">Taxa de Conversão</h3>
+                        <div class="w-full h-64"><canvas id="conversionChart"></canvas></div>
                     </div>
-                    <!-- Card de Clientes por Categoria -->
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="font-semibold text-gray-600">Clientes por Categoria</h3>
-                        <ul id="category-count" class="mt-2 space-y-1 text-sm text-gray-700"></ul>
+                    <div class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
+                        <h3 class="font-semibold text-gray-600 mb-2">Clientes por Categoria</h3>
+                        <div class="w-full h-64"><canvas id="categoryChart"></canvas></div>
                     </div>
-                    <!-- Card de Segmento Mais Explorado -->
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="font-semibold text-gray-600">Segmento Mais Explorado</h3>
-                        <p id="top-segment" class="text-3xl font-bold text-blue-600 mt-2">-</p>
-                        <p class="text-sm text-gray-500">Categoria com mais clientes</p>
+                    <div class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
+                        <h3 class="font-semibold text-gray-600 mb-2">Clientes por Vendedor</h3>
+                        <div class="w-full h-64"><canvas id="sellerChart"></canvas></div>
                     </div>
                 </div>
             </section>
@@ -124,7 +148,7 @@
     <!-- Modal para Adicionar/Editar Cliente -->
     <div id="client-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
         <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md">
-            <h2 class="text-2xl font-bold mb-6">Adicionar Novo Cliente</h2>
+            <h2 id="modal-title" class="text-2xl font-bold mb-6">Adicionar Novo Cliente</h2>
             <form id="client-form">
                 <div class="mb-4">
                     <label for="empresa" class="block text-sm font-medium text-gray-700 mb-1">Empresa*</label>
@@ -145,13 +169,14 @@
                     </div>
                 </div>
                 <div class="mb-4">
-                    <label for="vendedor" class="block text-sm font-medium text-gray-700 mb-1">Vendedor Responsável*</label>
-                    <input type="text" id="vendedor" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                    <label for="vendedor" class="block text-sm font-medium text-gray-700 mb-1">Vendedor Responsável</label>
+                    <input type="text" id="vendedor" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div class="mb-6">
                     <label for="categoria" class="block text-sm font-medium text-gray-700 mb-1">Categoria*</label>
                     <select id="categoria" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
                         <option value="Funilaria">Funilaria</option>
+                        <option value="Estetica Automotiva">Estética Automotiva</option>
                         <option value="Madeireira">Madeireira</option>
                         <option value="Industria">Indústria</option>
                         <option value="Veiculos Pesados">Veículos Pesados</option>
@@ -160,7 +185,7 @@
                 </div>
                 <div class="flex justify-end space-x-4">
                     <button type="button" id="cancel-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition duration-300">Cancelar</button>
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Salvar Cliente</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Salvar</button>
                 </div>
             </form>
         </div>
@@ -172,35 +197,7 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-        // =====================================================================================
-        // NOTA IMPORTANTE SOBRE O ERRO "Missing or insufficient permissions"
-        // =====================================================================================
-        // Este erro acontece porque as regras de segurança padrão do seu banco de dados
-        // Firestore não permitem que a aplicação leia ou escreva dados.
-        //
-        // PARA CORRIGIR:
-        // 1. Vá para o seu projeto no Firebase Console (https://console.firebase.google.com/).
-        // 2. No menu à esquerda, vá para "Build" -> "Firestore Database".
-        // 3. Clique na aba "Regras" (Rules) na parte superior.
-        // 4. Substitua todo o conteúdo pelo código abaixo e clique em "Publicar".
-        //
-        // ---- COPIE E COLE ESTAS REGRAS NO SEU FIREBASE ----
-        //
-        // rules_version = '2';
-        // service cloud.firestore {
-        //   match /databases/{database}/documents {
-        //     // Permite que qualquer usuário autenticado (incluindo anônimo)
-        //     // leia e escreva na coleção 'clientes'.
-        //     match /clientes/{clienteId} {
-        //       allow read, write: if request.auth != null;
-        //     }
-        //   }
-        // }
-        //
-        // =====================================================================================
-
         // --- Configuração e Inicialização ---
-        // CORREÇÃO: As chaves do seu projeto Firebase foram atualizadas.
         const firebaseConfig = {
             apiKey: "AIzaSyDPisgGzruxqnXzf9hPlb05uCN3hMozt2s",
             authDomain: "crm-silva-tintas.firebaseapp.com",
@@ -217,8 +214,12 @@
 
         // --- Variáveis de Estado ---
         let currentUserId = null;
-        let currentUserRole = null; // 'Admin' ou 'Vendas'
-        let unsubscribeFromClients = null; // Para parar de ouvir o snapshot no logout
+        let currentUserRole = null; 
+        let unsubscribeFromClients = null;
+        let editingClientId = null;
+        let allClientsData = []; 
+        let conversionChartInstance, categoryChartInstance, sellerChartInstance;
+
 
         // --- Elementos do DOM ---
         const loginView = document.getElementById('login-view');
@@ -232,14 +233,17 @@
         const clientCount = document.getElementById('client-count');
         const addClientBtn = document.getElementById('add-client-btn');
         const clientModal = document.getElementById('client-modal');
+        const modalTitle = document.getElementById('modal-title');
         const cancelBtn = document.getElementById('cancel-btn');
         const clientForm = document.getElementById('client-form');
+        const searchBar = document.getElementById('search-bar');
+        const filterCategory = document.getElementById('filter-category');
+        const filterSeller = document.getElementById('filter-seller');
 
         // --- Lógica de Autenticação e Login ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUserId = user.uid;
-                console.log("Firebase Auth está pronto. User ID:", currentUserId);
                 loginError.textContent = ""; 
             } else {
                 try {
@@ -254,15 +258,12 @@
 
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
             if (!currentUserId) {
-                loginError.textContent = 'Aguardando conexão... Tente novamente em um instante.';
+                loginError.textContent = 'Aguardando conexão... Tente novamente.';
                 return; 
             }
-
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-
             if ((username === 'Admin' && password === 'Admin') || (username === 'Vendas' && password === 'Vendas')) {
                 currentUserRole = (username === 'Admin') ? 'Admin' : 'Vendas';
                 showCrmView();
@@ -277,11 +278,7 @@
             loginError.textContent = '';
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
-
-            if (unsubscribeFromClients) {
-                unsubscribeFromClients();
-            }
-            
+            if (unsubscribeFromClients) unsubscribeFromClients();
             showLoginView();
         });
 
@@ -290,14 +287,8 @@
             loginView.classList.add('hidden-view');
             crmView.classList.remove('hidden-view');
             crmView.classList.add('visible-view');
-            
             welcomeMessage.textContent = `Bem-vindo, ${currentUserRole}!`;
-
-            if (currentUserRole === 'Admin') {
-                adminDashboard.classList.remove('hidden');
-            } else {
-                adminDashboard.classList.add('hidden');
-            }
+            adminDashboard.classList.toggle('hidden', currentUserRole !== 'Admin');
         }
 
         function showLoginView() {
@@ -311,103 +302,203 @@
         const clientsCollectionRef = collection(db, 'clientes');
 
         function listenToClients() {
-            if (unsubscribeFromClients) {
-                unsubscribeFromClients(); 
-            }
+            if (unsubscribeFromClients) unsubscribeFromClients();
+            
             unsubscribeFromClients = onSnapshot(clientsCollectionRef, (snapshot) => {
-                const allClients = snapshot.docs.map(doc => {
+                allClientsData = snapshot.docs.map(doc => {
                     const data = doc.data();
-                    const criadoEm = data.criadoEm && data.criadoEm.toDate ? data.criadoEm.toDate() : new Date();
+                    const criadoEm = data.criadoEm?.toDate ? data.criadoEm.toDate() : new Date();
                     return { id: doc.id, ...data, criadoEmDate: criadoEm };
                 });
-                
-                allClients.sort((a, b) => b.criadoEmDate - a.criadoEmDate);
-
-                renderClientList(allClients);
+                allClientsData.sort((a, b) => b.criadoEmDate - a.criadoEmDate);
                 
                 if (currentUserRole === 'Admin') {
-                    renderAdminDashboard(allClients);
+                    populateSellerFilter(allClientsData);
                 }
+                
+                updateMainDisplay();
             }, (error) => {
                 console.error("Erro ao buscar clientes:", error);
-                clientList.innerHTML = `<p class="text-red-500 col-span-full text-center">Erro ao carregar dados. Verifique as regras de segurança do Firestore no seu painel Firebase.</p>`;
+                clientList.innerHTML = `<p class="text-red-500 col-span-full text-center">Erro ao carregar dados. Verifique as regras de segurança do Firestore.</p>`;
             });
         }
+        
+        // --- Lógica de Filtros e Renderização ---
+        
+        searchBar.addEventListener('input', updateMainDisplay);
+        filterCategory.addEventListener('change', updateMainDisplay);
+        filterSeller.addEventListener('change', updateMainDisplay);
 
-        // --- Renderização ---
+        function updateMainDisplay() {
+            let filteredClients = [...allClientsData];
+            const searchTerm = searchBar.value.toLowerCase();
+
+            // Aplica filtro de pesquisa
+            if (searchTerm) {
+                filteredClients = filteredClients.filter(client => 
+                    (client.empresa?.toLowerCase() || '').includes(searchTerm) ||
+                    (client.endereco?.toLowerCase() || '').includes(searchTerm) ||
+                    (client.vendedor?.toLowerCase() || '').includes(searchTerm)
+                );
+            }
+
+            // Aplica filtros do Admin
+            if (currentUserRole === 'Admin') {
+                const selectedCategory = filterCategory.value;
+                const selectedSeller = filterSeller.value;
+
+                if (selectedCategory !== 'todos') {
+                    filteredClients = filteredClients.filter(c => c.categoria === selectedCategory);
+                }
+                if (selectedSeller !== 'todos') {
+                    filteredClients = filteredClients.filter(c => (c.vendedor || 'Não atribuído') === selectedSeller);
+                }
+                renderAdminDashboard(filteredClients);
+            }
+            
+            renderClientList(filteredClients);
+        }
+
         function renderClientList(clients) {
             clientList.innerHTML = '';
             clientCount.textContent = clients.length;
 
             if (clients.length === 0) {
-                clientList.innerHTML = `<p class="text-gray-500 col-span-full text-center">Nenhum cliente cadastrado.</p>`;
+                clientList.innerHTML = `<p class="text-gray-500 col-span-full text-center mt-8">Nenhum cliente encontrado.</p>`;
                 return;
             }
-
             clients.forEach(client => {
                 const clientCard = createClientCard(client.id, client);
                 clientList.appendChild(clientCard);
             });
         }
 
+        function populateSellerFilter(clients) {
+            const sellers = [...new Set(clients.map(c => c.vendedor || 'Não atribuído').filter(Boolean))];
+            filterSeller.innerHTML = '<option value="todos">Todos os Vendedores</option>';
+            sellers.sort().forEach(seller => {
+                const option = document.createElement('option');
+                option.value = seller;
+                option.textContent = seller;
+                filterSeller.appendChild(option);
+            });
+        }
+
         function renderAdminDashboard(clients) {
-            const totalClients = clients.length;
-            if (totalClients === 0) {
-                document.getElementById('conversion-rate').textContent = '0%';
-                document.getElementById('category-count').innerHTML = '<li>Nenhum cliente</li>';
-                document.getElementById('top-segment').textContent = '-';
-                return;
-            }
+            // Destroi gráficos antigos para evitar sobreposição
+            if(conversionChartInstance) conversionChartInstance.destroy();
+            if(categoryChartInstance) categoryChartInstance.destroy();
+            if(sellerChartInstance) sellerChartInstance.destroy();
 
-            const convertedClients = clients.filter(c => c.status === 'Cliente').length;
-            const conversionRate = (convertedClients / totalClients) * 100;
-            document.getElementById('conversion-rate').textContent = `${conversionRate.toFixed(1)}%`;
+            // 1. Gráfico de Conversão
+            const convertedCount = clients.filter(c => c.status === 'Cliente').length;
+            const notConvertedCount = clients.length - convertedCount;
+            conversionChartInstance = new Chart(document.getElementById('conversionChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Clientes Convertidos', 'Em Prospecção'],
+                    datasets: [{
+                        data: [convertedCount, notConvertedCount],
+                        backgroundColor: ['#10B981', '#6B7280'],
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
 
-            const categoryCount = clients.reduce((acc, client) => {
+            // 2. Gráfico de Categoria
+            const categoryCounts = clients.reduce((acc, client) => {
                 acc[client.categoria] = (acc[client.categoria] || 0) + 1;
                 return acc;
             }, {});
-
-            const categoryListEl = document.getElementById('category-count');
-            categoryListEl.innerHTML = '';
-            Object.entries(categoryCount).sort(([,a],[,b]) => b-a).forEach(([category, count]) => {
-                const li = document.createElement('li');
-                li.className = "flex justify-between";
-                li.innerHTML = `<span>${category}</span> <span class="font-bold">${count}</span>`;
-                categoryListEl.appendChild(li);
+            categoryChartInstance = new Chart(document.getElementById('categoryChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categoryCounts),
+                    datasets: [{
+                        data: Object.values(categoryCounts),
+                        backgroundColor: ['#8B5CF6', '#F59E0B', '#EF4444', '#6B7280', '#3B82F6', '#14B8A6'],
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
             });
 
-            const topSegment = Object.keys(categoryCount).length > 0 ? Object.keys(categoryCount).reduce((a, b) => categoryCount[a] > categoryCount[b] ? a : b) : '-';
-            document.getElementById('top-segment').textContent = topSegment;
+            // 3. Gráfico de Vendedor
+            const sellerCounts = clients.reduce((acc, client) => {
+                const sellerName = client.vendedor || 'Não atribuído';
+                acc[sellerName] = (acc[sellerName] || 0) + 1;
+                return acc;
+            }, {});
+            sellerChartInstance = new Chart(document.getElementById('sellerChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(sellerCounts),
+                    datasets: [{
+                        data: Object.values(sellerCounts),
+                        backgroundColor: ['#3B82F6', '#10B981', '#F97316', '#8B5CF6', '#D946EF'],
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+        
+        // --- Lógica do Modal e CRUD ---
+        function openModalForEdit(clientId) {
+            const clientData = allClientsData.find(c => c.id === clientId);
+            if (!clientData) return;
+
+            editingClientId = clientId;
+            modalTitle.textContent = "Editar Cliente";
+            document.getElementById('empresa').value = clientData.empresa || '';
+            document.getElementById('endereco').value = clientData.endereco || '';
+            document.getElementById('telefone').value = clientData.telefone || '';
+            document.getElementById('email').value = clientData.email || '';
+            document.getElementById('vendedor').value = clientData.vendedor || '';
+            document.getElementById('categoria').value = clientData.categoria || 'Funilaria';
+            
+            clientModal.classList.remove('hidden');
         }
 
-        // --- Lógica do Modal de Cliente ---
-        addClientBtn.addEventListener('click', () => clientModal.classList.remove('hidden'));
-        cancelBtn.addEventListener('click', () => clientModal.classList.add('hidden'));
-        clientModal.addEventListener('click', (e) => {
-            if (e.target === clientModal) clientModal.classList.add('hidden');
+        addClientBtn.addEventListener('click', () => {
+            editingClientId = null;
+            modalTitle.textContent = "Adicionar Novo Cliente";
+            clientForm.reset();
+            clientModal.classList.remove('hidden');
         });
 
-        // --- CRUD (Create, Update, Delete) ---
+        cancelBtn.addEventListener('click', () => {
+            clientModal.classList.add('hidden');
+            clientForm.reset();
+        });
+        
+        clientModal.addEventListener('click', (e) => {
+            if (e.target === clientModal) {
+                 clientModal.classList.add('hidden');
+                 clientForm.reset();
+            }
+        });
+
         clientForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const newClient = {
+            const clientData = {
                 empresa: document.getElementById('empresa').value.trim(),
                 endereco: document.getElementById('endereco').value.trim(),
                 telefone: document.getElementById('telefone').value.trim(),
                 email: document.getElementById('email').value.trim(),
                 vendedor: document.getElementById('vendedor').value.trim(),
                 categoria: document.getElementById('categoria').value,
-                status: 'Não contatado',
-                criadoEm: new Date(),
-                criadoPor: currentUserId
             };
             try {
-                await addDoc(clientsCollectionRef, newClient);
+                if (editingClientId) {
+                    const clientDocRef = doc(db, 'clientes', editingClientId);
+                    await updateDoc(clientDocRef, clientData);
+                } else {
+                    await addDoc(clientsCollectionRef, { ...clientData, status: 'Não contatado', criadoEm: new Date(), criadoPor: currentUserId });
+                }
                 clientModal.classList.add('hidden');
                 clientForm.reset();
+                editingClientId = null;
             } catch (error) {
-                console.error("Erro ao adicionar cliente:", error);
+                console.error("Erro ao salvar cliente:", error);
             }
         });
 
@@ -420,47 +511,63 @@
             const clientDocRef = doc(db, 'clientes', id);
             await deleteDoc(clientDocRef);
         }
+        
+        clientList.addEventListener('click', (e) => {
+            const editButton = e.target.closest('.edit-btn');
+            const deleteButton = e.target.closest('.delete-btn');
+            
+            if (editButton) {
+                openModalForEdit(editButton.dataset.id);
+            }
+            
+            // CORREÇÃO: Removido o `confirm()` que não funciona em todos os ambientes.
+            // A exclusão agora é direta ao clicar.
+            if (deleteButton) {
+                deleteClient(deleteButton.dataset.id);
+            }
+        });
 
         // --- Criação do Card do Cliente (UI) ---
         function createClientCard(id, data) {
             const card = document.createElement('div');
             card.className = 'bg-white rounded-lg shadow-md p-5 flex flex-col justify-between transition-transform transform hover:-translate-y-1';
-            
-            const categoryColors = { 'Funilaria': 'bg-purple-100 text-purple-800', 'Madeireira': 'bg-yellow-100 text-yellow-800', 'Industria': 'bg-red-100 text-red-800', 'Veiculos Pesados': 'bg-gray-200 text-gray-800', 'Outro': 'bg-blue-100 text-blue-800' };
+            const categoryColors = { 'Funilaria': 'bg-purple-100 text-purple-800', 'Estetica Automotiva': 'bg-teal-100 text-teal-800', 'Madeireira': 'bg-yellow-100 text-yellow-800', 'Industria': 'bg-red-100 text-red-800', 'Veiculos Pesados': 'bg-gray-200 text-gray-800', 'Outro': 'bg-blue-100 text-blue-800' };
             const statusColors = { 'Não contatado': 'bg-gray-200 text-gray-800', 'Contatado': 'bg-blue-200 text-blue-800', 'Em negociação': 'bg-yellow-200 text-yellow-800', 'Cliente': 'bg-green-200 text-green-800' };
             const statusOptions = ['Não contatado', 'Contatado', 'Em negociação', 'Cliente'];
-
             card.innerHTML = `
                 <div>
                     <div class="flex justify-between items-start mb-3">
                         <h3 class="text-lg font-bold text-gray-900 pr-2">${data.empresa}</h3>
                         <span class="text-xs font-semibold px-2 py-1 rounded-full ${categoryColors[data.categoria] || 'bg-gray-100'}">${data.categoria}</span>
                     </div>
-                    <p class="text-sm text-gray-600 mb-1"><span class="font-semibold">Endereço:</span> ${data.endereco}</p>
+                    <p class="text-sm text-gray-600 mb-1"><span class="font-semibold">Endereço:</span> ${data.endereco || 'Não informado'}</p>
                     ${data.telefone ? `<p class="text-sm text-gray-600 mb-1"><span class="font-semibold">Telefone:</span> ${data.telefone}</p>` : ''}
                     ${data.email ? `<p class="text-sm text-gray-600 mb-1"><span class="font-semibold">Email:</span> ${data.email}</p>` : ''}
-                    <p class="text-sm text-gray-600 mb-4"><span class="font-semibold">Vendedor:</span> ${data.vendedor}</p>
+                    <p class="text-sm text-gray-600 mb-4"><span class="font-semibold">Vendedor:</span> ${data.vendedor || 'Não atribuído'}</p>
                 </div>
                 <div class="mt-auto pt-4 border-t border-gray-200">
                     <div class="flex justify-between items-center">
                          <select class="status-select w-full text-sm font-semibold p-2 rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 ${statusColors[data.status]}">
                             ${statusOptions.map(opt => `<option value="${opt}" ${opt === data.status ? 'selected' : ''}>${opt}</option>`).join('')}
                         </select>
-                        <button class="delete-btn text-gray-400 hover:text-red-600 transition duration-300 ml-3 flex-shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                        </button>
+                        <div class="flex items-center ml-3">
+                            <button class="edit-btn text-gray-400 hover:text-blue-600 transition duration-300 mr-2" data-id="${id}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z" />
+                                </svg>
+                            </button>
+                            <button class="delete-btn text-gray-400 hover:text-red-600 transition duration-300" data-id="${id}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
-            
             card.querySelector('.status-select').addEventListener('change', (e) => updateClientStatus(id, e.target.value));
-            card.querySelector('.delete-btn').addEventListener('click', () => deleteClient(id));
-
             return card;
         }
-
     </script>
 </body>
 </html>

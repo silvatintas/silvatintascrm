@@ -186,22 +186,25 @@
 
     <script type="module">
         // Importações do Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
 
         // --- Configuração e Inicialização ---
+        // Suas credenciais do Firebase foram inseridas aqui
         const firebaseConfig = {
-            apiKey: "SUA_API_KEY", // ATENÇÃO: Substitua pela sua chave de API
+            apiKey: "AIzaSyDPisgGzruxqnXzf9hPlb05uCN3hMozt2s",
             authDomain: "crm-silva-tintas.firebaseapp.com",
             projectId: "crm-silva-tintas",
-            storageBucket: "crm-silva-tintas.appspot.com",
+            storageBucket: "crm-silva-tintas.firebasestorage.app",
             messagingSenderId: "37152653096",
             appId: "1:37152653096:web:37e27f33544fdc36abda1d",
             measurementId: "G-Y4EXZKNN2F"
         };
         
         const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
@@ -570,7 +573,7 @@
             return card;
         }
 
-        // --- NOVA LÓGICA DE IMPORTAÇÃO ---
+        // --- LÓGICA DE IMPORTAÇÃO ---
         importBtn.addEventListener('click', importProspects);
 
         const prospectsToImport = [

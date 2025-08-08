@@ -3,1710 +3,655 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM - Maria Beleza Mulher</title>
+    <title>CRM Prospecção - Silva Tintas</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        h1, h2, h3 { font-family: 'Playfair Display', serif; }
-        .brand-pink { color: #f472b6; }
-        .bg-brand-pink { background-color: #f472b6; }
-        .border-brand-pink { border-color: #f472b6; }
-        .ring-brand-pink { --tw-ring-color: #f472b6; }
-        .nav-link.active {
-            color: #f472b6;
-            border-bottom-color: #f472b6;
-            background-color: #fce7f3;
+        body {
+            font-family: 'Inter', sans-serif;
         }
-        .tab-link.active { color: #f472b6; border-color: #f472b6; }
-        #main-nav::-webkit-scrollbar { height: 4px; }
-        #main-nav::-webkit-scrollbar-thumb { background: #f472b6; border-radius: 10px; }
-        #main-nav::-webkit-scrollbar-track { background: #f1f5f9; }
-        button:disabled {
-            background-color: #cbd5e1;
-            cursor: not-allowed;
+        /* Estilo para a barra de rolagem */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        button:disabled:hover {
-            background-color: #cbd5e1;
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
         }
-        @media print {
-            body * { visibility: hidden; }
-            #print-area, #print-area * { visibility: visible; }
-            #print-area { position: absolute; left: 0; top: 0; width: 100%; }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
         }
-        .details-row.hidden {
-            display: none;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        /* Transições suaves */
+        .view {
+            transition: opacity 0.5s ease-in-out;
+        }
+        .hidden-view {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            width: 100%;
+        }
+        .visible-view {
+            opacity: 1;
+            position: relative;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="bg-gray-100 text-gray-800">
 
-    <div id="login-screen" class="flex items-center justify-center min-h-screen bg-gray-100">
-        <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-lg mx-4">
-            <div class="text-center">
-                <h1 class="text-4xl font-bold text-slate-800">Maria Beleza Mulher</h1>
-                <p class="mt-2 text-slate-500">"Refaça o pacto com sua beleza"</p>
+    <div id="login-view" class="view visible-view min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-sm bg-white p-8 rounded-xl shadow-lg">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-700">Silva Tintas</h1>
+                <p class="text-gray-500">CRM de Prospecção</p>
             </div>
-            <form id="login-form" class="space-y-6">
-                <div>
-                    <label for="module" class="text-sm font-medium text-slate-700">Módulo</label>
-                    <select id="module" required class="w-full px-4 py-3 mt-1 border border-slate-300 rounded-lg focus:ring-brand-pink focus:border-brand-pink">
-                        <option value="vendas">Vendas</option>
-                        <option value="estoque">Estoque</option>
-                        <option value="financeiro">Financeiro</option>
-                    </select>
+            <form id="login-form">
+                <div class="mb-4">
+                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Login</label>
+                    <input type="text" id="username" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
                 </div>
-                <div>
-                    <label for="username" class="text-sm font-medium text-slate-700">Login</label>
-                    <input id="username" type="text" required class="w-full px-4 py-3 mt-1 border border-slate-300 rounded-lg focus:ring-brand-pink focus:border-brand-pink">
+                <div class="mb-6">
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+                    <input type="password" id="password" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
                 </div>
-                <div>
-                    <label for="password" class="text-sm font-medium text-slate-700">Senha</label>
-                    <input id="password" type="password" required class="w-full px-4 py-3 mt-1 border border-slate-300 rounded-lg focus:ring-brand-pink focus:border-brand-pink">
-                </div>
-                <div id="login-error" class="text-red-500 text-sm text-center hidden">Usuário ou senha inválidos.</div>
-                <button type="submit" class="w-full px-5 py-3 font-semibold text-white bg-pink-400 rounded-lg hover:bg-pink-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-pink transition-colors duration-300">
-                    Entrar
-                </button>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">Entrar</button>
+                <p id="login-error" class="text-red-500 text-sm text-center mt-4"></p>
             </form>
         </div>
     </div>
 
-    <div id="app" class="hidden flex flex-col h-screen">
-        <header class="bg-white shadow-md sticky top-0 z-30">
-            <div class="container mx-auto flex justify-between items-center p-4">
-                <h1 class="text-xl sm:text-2xl font-bold brand-pink">Maria Beleza</h1>
-                <div class="flex items-center gap-4">
-                    <div class="text-right">
-                        <p class="text-xs text-slate-500">Usuário:</p>
-                        <p id="user-name-display" class="text-sm font-semibold text-slate-800"></p>
+    <div id="crm-view" class="view hidden-view">
+        <div class="container mx-auto p-4 md:p-8">
+
+            <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-700">CRM Silva Tintas</h1>
+                    <p id="welcome-message" class="text-gray-500">Bem-vindo!</p>
+                </div>
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <div class="text-center">
+                        <span id="client-count" class="text-2xl font-bold text-blue-600">0</span>
+                        <p class="text-sm text-gray-500">Clientes</p>
                     </div>
-                    <button id="btn-logout" class="p-2 text-slate-600 hover:text-red-500 transition-colors" title="Sair">
-                        <i data-lucide="log-out" class="w-5 h-5"></i>
+                    <button id="import-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 text-sm">
+                        Importar Clientes
+                    </button>
+                    <button id="add-client-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 text-sm">
+                        + Adicionar
+                    </button>
+                    <button id="logout-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
+                        Sair
                     </button>
                 </div>
+            </header>
+            
+            <div class="mb-8">
+                <input type="text" id="search-bar" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Pesquisar por empresa, endereço, vendedor...">
             </div>
-            <nav id="main-nav" class="bg-slate-100 border-t border-b border-slate-200 overflow-x-auto whitespace-nowrap">
-                <div id="nav-container" class="container mx-auto flex">
-                </div>
-            </nav>
-        </header>
 
-        <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-gray-100">
-            <div id="view-container" class="container mx-auto">
-            </div>
-        </main>
-    </div>
-    
-    <div id="modal-container" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-        <div id="modal-content" class="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 m-4">
+            <section id="admin-dashboard" class="mb-8 hidden">
+                <h2 class="text-2xl font-bold text-gray-700 mb-4">Dashboard do Administrador</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-white p-4 rounded-lg shadow">
+                    <div>
+                        <label for="filter-category" class="block text-sm font-medium text-gray-700">Filtrar por Categoria</label>
+                        <select id="filter-category" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <option value="todos">Todas as Categorias</option>
+                            <option value="Funilaria">Funilaria</option>
+                            <option value="Estetica Automotiva">Estética Automotiva</option>
+                            <option value="Marcenaria">Marcenaria</option>
+                            <option value="Industria">Indústria</option>
+                            <option value="Fabrica">Fábrica</option>
+                            <option value="Usina">Usina</option>
+                            <option value="Car Detailing">Car Detailing</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filter-seller" class="block text-sm font-medium text-gray-700">Filtrar por Vendedor</label>
+                        <select id="filter-seller" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <option value="todos">Todos os Vendedores</option>
+                            </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
+                        <h3 class="font-semibold text-gray-600 mb-2">Taxa de Conversão</h3>
+                        <div class="w-full h-64"><canvas id="conversionChart"></canvas></div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
+                        <h3 class="font-semibold text-gray-600 mb-2">Clientes por Categoria</h3>
+                        <div class="w-full h-64"><canvas id="categoryChart"></canvas></div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
+                        <h3 class="font-semibold text-gray-600 mb-2">Clientes por Vendedor</h3>
+                        <div class="w-full h-64"><canvas id="sellerChart"></canvas></div>
+                    </div>
+                </div>
+            </section>
+            
+            <main id="client-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                </main>
         </div>
     </div>
 
+    <div id="client-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md">
+            <h2 id="modal-title" class="text-2xl font-bold mb-6">Adicionar Novo Cliente</h2>
+            <form id="client-form">
+                <div class="mb-4">
+                    <label for="empresa" class="block text-sm font-medium text-gray-700 mb-1">Empresa*</label>
+                    <input type="text" id="empresa" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label for="endereco" class="block text-sm font-medium text-gray-700 mb-1">Endereço*</label>
+                    <input type="text" id="endereco" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="telefone" class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                        <input type="tel" id="telefone" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="email" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="vendedor" class="block text-sm font-medium text-gray-700 mb-1">Vendedor Responsável</label>
+                    <input type="text" id="vendedor" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div class="mb-6">
+                    <label for="categoria" class="block text-sm font-medium text-gray-700 mb-1">Categoria*</label>
+                    <select id="categoria" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                        <option value="Funilaria">Funilaria</option>
+                        <option value="Estetica Automotiva">Estética Automotiva</option>
+                        <option value="Marcenaria">Marcenaria</option>
+                        <option value="Industria">Indústria</option>
+                        <option value="Fabrica">Fábrica</option>
+                        <option value="Usina">Usina</option>
+                        <option value="Car Detailing">Car Detailing</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" id="cancel-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition duration-300">Cancelar</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script type="module">
+        // Importações do Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, addDoc, getDocs, onSnapshot, updateDoc, deleteDoc, query, where, writeBatch, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
 
-        // --- CONFIGURAÇÃO FIREBASE ---
-        const firebaseConfig = { apiKey: "AIzaSyDPisgGzruxqnXzf9hPlb05uCN3hMozt2s", authDomain: "crm-silva-tintas.firebaseapp.com", projectId: "crm-silva-tintas", storageBucket: "crm-silva-tintas.firebasestorage.app", messagingSenderId: "37152653096", appId: "1:37152653096:web:37e27f33544fdc36abda1d", measurementId: "G-Y4EXZKNN2F" };
-
+        // --- Configuração e Inicialização ---
+        // Suas credenciais do Firebase foram inseridas aqui
+        const firebaseConfig = {
+            apiKey: "AIzaSyDPisgGzruxqnXzf9hPlb05uCN3hMozt2s",
+            authDomain: "crm-silva-tintas.firebaseapp.com",
+            projectId: "crm-silva-tintas",
+            storageBucket: "crm-silva-tintas.firebasestorage.app",
+            messagingSenderId: "37152653096",
+            appId: "1:37152653096:web:37e27f33544fdc36abda1d",
+            measurementId: "G-Y4EXZKNN2F"
+        };
+        
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
-        const db = getFirestore(app);
         const auth = getAuth(app);
-        
-        const artifactAppId = typeof __app_id !== 'undefined' ? __app_id : 'crm-maria-beleza';
+        const db = getFirestore(app);
 
-        let salesChart = null;
-        let expenseChart = null;
-        const ADMIN_PASSWORD_STATIC = '20092005';
+        // --- Variáveis de Estado ---
+        let currentUserId = null;
+        let currentUserRole = null; 
+        let unsubscribeFromClients = null;
+        let editingClientId = null;
+        let allClientsData = []; 
+        let conversionChartInstance, categoryChartInstance, sellerChartInstance;
 
-        // Estado da aplicação
-        const state = {
-            currentUser: null,
-            currentModule: null,
-            clients: [],
-            products: [],
-            sales: [],
-            quotes: [],
-            users: [],
-            onlineUsers: [],
-            expenses: [],
-            expenseCategories: [],
-            purchaseOrders: [],
-            receivables: [], 
-            quoteToConvert: null,
-            currentView: 'dashboard',
-            currentParam: null
-        };
+        // --- Elementos do DOM ---
+        const loginView = document.getElementById('login-view');
+        const crmView = document.getElementById('crm-view');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+        const logoutBtn = document.getElementById('logout-btn');
+        const welcomeMessage = document.getElementById('welcome-message');
+        const adminDashboard = document.getElementById('admin-dashboard');
+        const clientList = document.getElementById('client-list');
+        const clientCount = document.getElementById('client-count');
+        const addClientBtn = document.getElementById('add-client-btn');
+        const importBtn = document.getElementById('import-btn'); // Novo botão
+        const clientModal = document.getElementById('client-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const clientForm = document.getElementById('client-form');
+        const searchBar = document.getElementById('search-bar');
+        const filterCategory = document.getElementById('filter-category');
+        const filterSeller = document.getElementById('filter-seller');
 
-        // --- INICIALIZAÇÃO DA APLICAÇÃO ---
-        
+        // --- Lógica de Autenticação e Login ---
         onAuthStateChanged(auth, async (user) => {
-            if (!user) {
+            if (user) {
+                currentUserId = user.uid;
+                loginError.textContent = ""; 
+            } else {
                 try {
+                    loginError.textContent = "Conectando...";
                     await signInAnonymously(auth);
                 } catch (error) {
-                    console.error("Erro na autenticação anônima:", error);
+                    console.error("Falha ao conectar com o Firebase:", error);
+                    loginError.textContent = "Erro de conexão. Verifique a internet.";
                 }
             }
         });
 
-        function setupDbPaths() {
-            const basePath = `artifacts/${artifactAppId}/public/data`;
-            return {
-                clients: `${basePath}/clients`,
-                products: `${basePath}/products`,
-                sales: `${basePath}/sales`,
-                quotes: `${basePath}/quotes`,
-                users: `${basePath}/users`,
-                sessions: `${basePath}/sessions`,
-                expenses: `${basePath}/expenses`,
-                expenseCategories: `${basePath}/expenseCategories`,
-                purchaseOrders: `${basePath}/purchaseOrders`,
-                receivables: `${basePath}/receivables`,
-            };
-        }
-        const dbPaths = setupDbPaths();
-        
-        async function initializeAdminUser() {
-            const usersQuery = query(collection(db, dbPaths.users), where("username", "==", "Admin"));
-            const querySnapshot = await getDocs(usersQuery);
-            if (querySnapshot.empty) {
-                await addDoc(collection(db, dbPaths.users), {
-                    username: "Admin",
-                    password: ADMIN_PASSWORD_STATIC,
-                    role: "admin",
-                });
-            }
-        }
-        initializeAdminUser();
-        
-        function setupListeners() {
-            if (!state.currentUser) return;
-            onSnapshot(query(collection(db, dbPaths.clients)), s => { state.clients = s.docs.map((d, i) => ({ id: d.id, code: i + 1, ...d.data() })); if (['clientes', 'cobranca', 'financeiro', 'clientProfile'].includes(state.currentView)) render(); });
-            onSnapshot(query(collection(db, dbPaths.products)), s => { state.products = s.docs.map(d => ({ id: d.id, ...d.data() })); if (['produtos', 'estoque', 'compras'].includes(state.currentView)) render(); });
-            onSnapshot(query(collection(db, dbPaths.sales)), s => { state.sales = s.docs.map(d => ({ id: d.id, ...d.data() })); if (['dashboard', 'estoque', 'vendas', 'financeiro', 'clientes', 'clientProfile'].includes(state.currentView)) render(); });
-            onSnapshot(query(collection(db, dbPaths.quotes)), s => { state.quotes = s.docs.map(d => ({ id: d.id, ...d.data() })); if (state.currentView === 'orcamento') render(); });
-            onSnapshot(query(collection(db, dbPaths.users)), s => { state.users = s.docs.map(d => ({ id: d.id, ...d.data() })); if (state.currentView === 'opcoes') render(); });
-            onSnapshot(query(collection(db, dbPaths.expenses)), s => { state.expenses = s.docs.map(d => ({ id: d.id, ...d.data() })); if (['contas_a_pagar', 'financeiro'].includes(state.currentView)) render(); });
-            onSnapshot(query(collection(db, dbPaths.expenseCategories)), s => { state.expenseCategories = s.docs.map(d => ({ id: d.id, ...d.data() })); if (['contas_a_pagar', 'financeiro'].includes(state.currentView)) render(); });
-            onSnapshot(query(collection(db, dbPaths.purchaseOrders)), s => { state.purchaseOrders = s.docs.map(d => ({ id: d.id, ...d.data() })); if (['compras', 'contas_a_pagar'].includes(state.currentView)) render(); });
-            onSnapshot(query(collection(db, dbPaths.receivables)), s => { state.receivables = s.docs.map(d => ({ id: d.id, ...d.data() })); if (['cobranca', 'clientProfile', 'vendas'].includes(state.currentView)) render(); });
-
-            const sessionsQuery = query(collection(db, dbPaths.sessions));
-            onSnapshot(sessionsQuery, (snapshot) => {
-                const now = Date.now();
-                state.onlineUsers = snapshot.docs
-                    .map(doc => ({ id: doc.id, ...doc.data() }))
-                    .filter(session => session.lastSeen && (now - session.lastSeen.toDate().getTime()) < 60000);
-                if (state.currentView === 'opcoes') render();
-            });
-        }
-
-        // --- LÓGICA DE LOGIN E LOGOUT ---
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+        loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const module = document.getElementById('module').value;
+            if (!currentUserId) {
+                loginError.textContent = 'Aguardando conexão... Tente novamente.';
+                return; 
+            }
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            const errorEl = document.getElementById('login-error');
-
-            const usersRef = collection(db, dbPaths.users);
-            const q = query(usersRef, where("username", "==", username), where("password", "==", password));
-            
-            const querySnapshot = await getDocs(q);
-            
-            if (querySnapshot.empty) {
-                errorEl.classList.remove('hidden');
+            if ((username === 'Admin' && password === 'Admin') || (username === 'Vendas' && password === 'Vendas')) {
+                currentUserRole = (username === 'Admin') ? 'Admin' : 'Vendas';
+                showCrmView();
+                listenToClients();
             } else {
-                errorEl.classList.add('hidden');
-                const userDoc = querySnapshot.docs[0];
-                state.currentUser = { id: userDoc.id, ...userDoc.data() };
-                state.currentModule = module;
-                
-                document.getElementById('user-name-display').textContent = state.currentUser.username;
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('app').classList.remove('hidden');
-                
-                setupListeners();
-                updateUserSession();
-                setInterval(updateUserSession, 30000);
-
-                setTimeout(checkUpcomingBills, 3000);
-
-                renderNav();
-                lucide.createIcons();
-                navigateTo('dashboard');
+                loginError.textContent = 'Login ou senha inválidos.';
             }
         });
 
-        function handleLogout() {
-            window.location.reload();
-        }
-
-        async function updateUserSession() {
-            if (!state.currentUser) return;
-            const sessionRef = doc(db, dbPaths.sessions, state.currentUser.id);
-            await updateDoc(sessionRef, {
-                username: state.currentUser.username,
-                lastSeen: serverTimestamp()
-            }).catch(async (error) => {
-                if (error.code === 'not-found') {
-                    await setDoc(sessionRef, {
-                        username: state.currentUser.username,
-                        lastSeen: serverTimestamp()
-                    });
-                }
-            });
-        }
-
-        // --- ROTEAMENTO E RENDERIZAÇÃO ---
-        const viewContainer = document.getElementById('view-container');
-        const navContainer = document.getElementById('nav-container');
-
-        const moduleViews = {
-            vendas: {
-                dashboard: 'Início',
-                orcamento: 'Orçamento',
-                vendas: 'Vendas',
-                clientes: 'Clientes'
-            },
-            estoque: {
-                dashboard: 'Início',
-                produtos: 'Produtos',
-                compras: 'Compras',
-                estoque: 'Estoque'
-            },
-            financeiro: {
-                dashboard: 'Início',
-                financeiro: 'Financeiro',
-                contas_a_pagar: 'Contas a Pagar',
-                cobranca: 'Cobrança',
-                opcoes: 'Opções'
-            }
-        };
-
-        function renderNav() {
-            const viewsForModule = moduleViews[state.currentModule] || {};
-            navContainer.innerHTML = Object.entries(viewsForModule).map(([view, title]) =>
-                `<a href="#" class="nav-link px-4 py-3 text-sm font-medium text-slate-600 hover:bg-slate-200 border-b-2 border-transparent transition-colors" data-view="${view}">${title}</a>`
-            ).join('');
-        }
-        
-        function navigateTo(view, param = null) {
-            state.currentView = view;
-            state.currentParam = param;
-            
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-                if (link.dataset.view === view) {
-                    link.classList.add('active');
-                }
-            });
-            render();
-        }
-
-        document.getElementById('main-nav').addEventListener('click', (e) => {
-            const link = e.target.closest('.nav-link');
-            if (link) {
-                e.preventDefault();
-                navigateTo(link.dataset.view);
-            }
+        logoutBtn.addEventListener('click', () => {
+            currentUserRole = null;
+            loginError.textContent = '';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            if (unsubscribeFromClients) unsubscribeFromClients();
+            showLoginView();
         });
 
-        function render() {
-            if (salesChart) { salesChart.destroy(); salesChart = null; }
-            if (expenseChart) { expenseChart.destroy(); expenseChart = null; }
+        function showCrmView() {
+            loginView.classList.remove('visible-view');
+            loginView.classList.add('hidden-view');
+            crmView.classList.remove('hidden-view');
+            crmView.classList.add('visible-view');
+            welcomeMessage.textContent = `Bem-vindo, ${currentUserRole}!`;
+            adminDashboard.classList.toggle('hidden', currentUserRole !== 'Admin');
+        }
 
-            const views = {
-                dashboard: renderDashboard,
-                clientes: renderClientes,
-                clientProfile: () => renderClientProfile(state.currentParam),
-                produtos: renderProdutos,
-                compras: renderCompras,
-                estoque: () => { const html = renderEstoque(); renderSalesChart(); return html; },
-                vendas: renderVendas,
-                orcamento: renderOrcamentos,
-                cobranca: renderCobranca,
-                financeiro: () => { const html = renderFinanceiro(); renderExpenseChart(); return html; },
-                contas_a_pagar: renderContasAPagar,
-                opcoes: renderOpcoes
-            };
-            if (state.currentView === 'opcoes' && state.currentUser.role !== 'admin') {
-                const password = prompt('Acesso restrito. Por favor, insira a senha de administrador:');
-                if (password === ADMIN_PASSWORD_STATIC) {
-                    viewContainer.innerHTML = views[state.currentView]();
-                } else {
-                    alert('Senha incorreta!');
-                    navigateTo('dashboard');
-                    return;
+        function showLoginView() {
+            crmView.classList.remove('visible-view');
+            crmView.classList.add('hidden-view');
+            loginView.classList.remove('hidden-view');
+            loginView.classList.add('visible-view');
+        }
+
+        // --- Lógica do Firestore ---
+        const clientsCollectionRef = collection(db, 'clientes');
+
+        function listenToClients() {
+            if (unsubscribeFromClients) unsubscribeFromClients();
+            
+            unsubscribeFromClients = onSnapshot(clientsCollectionRef, (snapshot) => {
+                allClientsData = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    const criadoEm = data.criadoEm?.toDate ? data.criadoEm.toDate() : new Date();
+                    return { id: doc.id, ...data, criadoEmDate: criadoEm };
+                });
+                allClientsData.sort((a, b) => b.criadoEmDate - a.criadoEmDate);
+                
+                if (currentUserRole === 'Admin') {
+                    populateSellerFilter(allClientsData);
                 }
-            } else {
-                viewContainer.innerHTML = views[state.currentView] ? views[state.currentView]() : '<h2>Página não encontrada</h2>';
+                
+                updateMainDisplay();
+            }, (error) => {
+                console.error("Erro ao buscar clientes:", error);
+                clientList.innerHTML = `<p class="text-red-500 col-span-full text-center">Erro ao carregar dados. Verifique as regras de segurança do Firestore.</p>`;
+            });
+        }
+        
+        // --- Lógica de Filtros e Renderização ---
+        
+        searchBar.addEventListener('input', updateMainDisplay);
+        filterCategory.addEventListener('change', updateMainDisplay);
+        filterSeller.addEventListener('change', updateMainDisplay);
+
+        function updateMainDisplay() {
+            let filteredClients = [...allClientsData];
+            const searchTerm = searchBar.value.toLowerCase();
+
+            // Aplica filtro de pesquisa
+            if (searchTerm) {
+                filteredClients = filteredClients.filter(client => 
+                    (client.empresa?.toLowerCase() || '').includes(searchTerm) ||
+                    (client.endereco?.toLowerCase() || '').includes(searchTerm) ||
+                    (client.vendedor?.toLowerCase() || '').includes(searchTerm)
+                );
+            }
+
+            // Aplica filtros do Admin
+            if (currentUserRole === 'Admin') {
+                const selectedCategory = filterCategory.value;
+                const selectedSeller = filterSeller.value;
+
+                if (selectedCategory !== 'todos') {
+                    filteredClients = filteredClients.filter(c => c.categoria === selectedCategory);
+                }
+                if (selectedSeller !== 'todos') {
+                    filteredClients = filteredClients.filter(c => (c.vendedor || 'Não atribuído') === selectedSeller);
+                }
+                renderAdminDashboard(filteredClients);
             }
             
-            lucide.createIcons();
-            addEventListeners();
+            renderClientList(filteredClients);
         }
-        
-        // --- TEMPLATES DAS VIEWS ---
-        function renderDashboard() {
-            const totalClients = state.clients.length;
-            const totalProducts = state.products.length;
-            const totalSales = state.sales.length;
-            const totalRevenue = state.sales.reduce((sum, sale) => sum + sale.total, 0);
 
-            return `
-                <h2 class="text-3xl font-bold text-slate-800 mb-6">Painel de Controle</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="bg-white p-6 rounded-lg shadow"><div class="flex items-center"><div class="p-3 rounded-full bg-pink-100"><i data-lucide="users" class="w-6 h-6 brand-pink"></i></div><div class="ml-4"><p class="text-sm text-slate-500">Total de Clientes</p><p class="text-2xl font-bold">${totalClients}</p></div></div></div>
-                    <div class="bg-white p-6 rounded-lg shadow"><div class="flex items-center"><div class="p-3 rounded-full bg-pink-100"><i data-lucide="package" class="w-6 h-6 brand-pink"></i></div><div class="ml-4"><p class="text-sm text-slate-500">Produtos Cadastrados</p><p class="text-2xl font-bold">${totalProducts}</p></div></div></div>
-                    <div class="bg-white p-6 rounded-lg shadow"><div class="flex items-center"><div class="p-3 rounded-full bg-pink-100"><i data-lucide="shopping-cart" class="w-6 h-6 brand-pink"></i></div><div class="ml-4"><p class="text-sm text-slate-500">Vendas Realizadas</p><p class="text-2xl font-bold">${totalSales}</p></div></div></div>
-                    <div class="bg-white p-6 rounded-lg shadow"><div class="flex items-center"><div class="p-3 rounded-full bg-pink-100"><i data-lucide="bar-chart-2" class="w-6 h-6 brand-pink"></i></div><div class="ml-4"><p class="text-sm text-slate-500">Receita Total</p><p class="text-2xl font-bold">R$ ${totalRevenue.toFixed(2).replace('.',',')}</p></div></div></div>
-                </div>
-            `;
+        function renderClientList(clients) {
+            clientList.innerHTML = '';
+            clientCount.textContent = clients.length;
+
+            if (clients.length === 0) {
+                clientList.innerHTML = `<p class="text-gray-500 col-span-full text-center mt-8">Nenhum cliente encontrado.</p>`;
+                return;
+            }
+            clients.forEach(client => {
+                const clientCard = createClientCard(client.id, client);
+                clientList.appendChild(clientCard);
+            });
         }
-        
-        function renderFinanceiro() {
-            const paidExpenses = state.expenses.filter(e => e.status === 'Pago');
-            const totalRevenue = state.sales.reduce((sum, sale) => sum + sale.total, 0);
-            const totalCostOfGoods = state.sales.flatMap(sale => sale.items).reduce((sum, item) => sum + ((item.cost || 0) * item.quantity), 0);
-            const totalExpenses = paidExpenses.reduce((sum, expense) => sum + expense.amount, 0);
-            const netProfit = totalRevenue - totalCostOfGoods - totalExpenses;
-            const accountsReceivableTotal = state.receivables.filter(r => r.status === 'Pendente').reduce((sum, r) => sum + r.amount, 0);
-            
-            const salesBySeller = state.sales.reduce((acc, sale) => {
-                const sellerName = sale.sellerName || 'N/A';
-                if (!acc[sellerName]) acc[sellerName] = { count: 0, total: 0 };
-                acc[sellerName].count++;
-                acc[sellerName].total += sale.total;
-                return acc;
-            }, {});
-            const sellerRows = Object.entries(salesBySeller).map(([name, data]) => `<tr class="border-b"><td class="p-4 font-medium">${name}</td><td class="p-4 text-center">${data.count}</td><td class="p-4 text-right font-semibold text-green-600">R$ ${data.total.toFixed(2).replace('.', ',')}</td></tr>`).join('');
-            
-            return `
-                <h2 class="text-3xl font-bold text-slate-800 mb-6">Painel Financeiro</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-white p-6 rounded-lg shadow"><p class="text-sm text-slate-500">Receita Bruta</p><p class="text-3xl font-bold text-blue-600">R$ ${totalRevenue.toFixed(2).replace('.', ',')}</p></div>
-                    <div class="bg-white p-6 rounded-lg shadow"><p class="text-sm text-slate-500">Despesas Pagas</p><p class="text-3xl font-bold text-red-500">R$ ${totalExpenses.toFixed(2).replace('.', ',')}</p></div>
-                    <div class="bg-white p-6 rounded-lg shadow"><p class="text-sm text-slate-500">Lucro Líquido</p><p class="text-3xl font-bold text-green-600">R$ ${netProfit.toFixed(2).replace('.', ',')}</p></div>
-                    <div class="bg-white p-6 rounded-lg shadow"><p class="text-sm text-slate-500">Contas a Receber</p><p class="text-3xl font-bold text-orange-500">R$ ${accountsReceivableTotal.toFixed(2).replace('.', ',')}</p></div>
-                </div>
-                <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                    <div class="lg:col-span-3 bg-white p-6 rounded-lg shadow"><h3 class="text-xl font-bold text-slate-800 mb-4">Relatório de Vendedores</h3><div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr><th class="p-4 text-left">Vendedor</th><th class="p-4 text-center">Nº Vendas</th><th class="p-4 text-right">Total Vendido</th></tr></thead><tbody>${sellerRows || '<tr><td colspan="3" class="p-4 text-center">Nenhuma venda registrada.</td></tr>'}</tbody></table></div></div>
-                    <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow"><h3 class="text-xl font-bold text-slate-800 mb-4">Gráfico de Despesas (Pagas)</h3><canvas id="expenseChart"></canvas></div>
-                </div>
-            `;
+
+        function populateSellerFilter(clients) {
+            const sellers = [...new Set(clients.map(c => c.vendedor || 'Não atribuído').filter(Boolean))];
+            filterSeller.innerHTML = '<option value="todos">Todos os Vendedores</option>';
+            sellers.sort().forEach(seller => {
+                const option = document.createElement('option');
+                option.value = seller;
+                option.textContent = seller;
+                filterSeller.appendChild(option);
+            });
         }
-        
-        function renderExpenseChart() {
-            const ctx = document.getElementById('expenseChart');
-            const paidExpenses = state.expenses.filter(e => e.status === 'Pago');
-            if (!ctx || paidExpenses.length === 0) return;
 
-            const expensesByCategory = paidExpenses.reduce((acc, expense) => {
-                const categoryName = state.expenseCategories.find(c => c.id === expense.categoryId)?.name || 'Sem Categoria';
-                if (!acc[categoryName]) {
-                    acc[categoryName] = 0;
-                }
-                acc[categoryName] += expense.amount;
-                return acc;
-            }, {});
+        function renderAdminDashboard(clients) {
+            // Destroi gráficos antigos para evitar sobreposição
+            if(conversionChartInstance) conversionChartInstance.destroy();
+            if(categoryChartInstance) categoryChartInstance.destroy();
+            if(sellerChartInstance) sellerChartInstance.destroy();
 
-            const labels = Object.keys(expensesByCategory);
-            const data = Object.values(expensesByCategory);
-            
-            if (expenseChart) expenseChart.destroy();
-            expenseChart = new Chart(ctx, {
+            // 1. Gráfico de Conversão
+            const convertedCount = clients.filter(c => c.status === 'Cliente').length;
+            const notConvertedCount = clients.length - convertedCount;
+            conversionChartInstance = new Chart(document.getElementById('conversionChart'), {
                 type: 'doughnut',
                 data: {
-                    labels: labels,
+                    labels: ['Clientes Convertidos', 'Em Prospecção'],
                     datasets: [{
-                        label: 'Despesas por Categoria',
-                        data: data,
-                        backgroundColor: [ '#f87171', '#fb923c', '#facc15', '#a3e635', '#4ade80', '#34d399', '#22d3ee', '#60a5fa', '#a78bfa', '#f472b6'],
-                        hoverOffset: 4
+                        data: [convertedCount, notConvertedCount],
+                        backgroundColor: ['#10B981', '#6B7280'],
                     }]
                 },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'top' },
-                        title: { display: false }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false }
             });
-        }
-        
-        function renderClientes() {
-            const clientsRows = state.clients.map(client => `<tr class="border-b"><td class="p-4">${client.code}</td><td class="p-4 font-medium">${client.name}</td><td class="p-4 hidden sm:table-cell">${client.cpf||'N/A'}</td><td class="p-4 hidden md:table-cell">${client.phone||'N/A'}</td><td class="p-4 flex gap-2"><button class="btn-view-profile p-2 text-green-600 hover:bg-green-100 rounded-full" title="Ver Perfil" data-client-id="${client.id}"><i data-lucide="eye" class="w-5 h-5"></i></button><button class="btn-edit-client p-2 text-blue-500 hover:bg-blue-100 rounded-full" title="Editar" data-client-id="${client.id}"><i data-lucide="edit" class="w-5 h-5"></i></button><button class="btn-delete-client p-2 text-red-500 hover:bg-red-100 rounded-full" title="Excluir" data-client-id="${client.id}"><i data-lucide="trash-2" class="w-5 h-5"></i></button></td></tr>`).join('');
-            return `
-                <div class="flex justify-between items-center mb-6 flex-wrap gap-4"><h2 class="text-3xl font-bold text-slate-800">Gerenciar Clientes</h2><button id="btn-new-client" class="bg-pink-400 text-white px-5 py-3 rounded-lg font-semibold hover:bg-pink-500 flex items-center"><i data-lucide="plus" class="w-5 h-5 mr-2"></i> Novo Cliente</button></div>
-                <div class="bg-white rounded-lg shadow overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr><th class="p-4 text-left">Cód.</th><th class="p-4 text-left">Nome</th><th class="p-4 text-left hidden sm:table-cell">CPF</th><th class="p-4 text-left hidden md:table-cell">Telefone</th><th class="p-4 text-left">Ações</th></tr></thead><tbody>${clientsRows||'<tr><td colspan="5" class="p-4 text-center">Nenhum cliente.</td></tr>'}</tbody></table></div></div>
-            `;
-        }
 
-        function renderClientProfile(clientId) {
-            const client = state.clients.find(c => c.id === clientId);
-            if (!client) return `<h2 class="text-3xl">Cliente não encontrado</h2><p><button id="btn-back-to-clients" class="text-blue-500 hover:underline">Voltar</button></p>`;
-
-            const clientSales = state.sales.filter(s => s.clientId === clientId).sort((a,b) => b.date.toDate() - a.date.toDate());
-            const clientReceivables = state.receivables.filter(r => r.clientId === clientId).sort((a,b) => a.dueDate.toDate() - b.dueDate.toDate());
-
-            const salesRows = clientSales.map(s => `
-                <tr class="border-b">
-                    <td class="p-3">${s.date.toDate().toLocaleDateString('pt-BR')}</td>
-                    <td class="p-3">${s.items.map(i => `${i.quantity}x ${i.productName}`).join(', ')}</td>
-                    <td class="p-3">${s.paymentMethod} ${s.installmentsCount ? `(${s.installmentsCount}x)` : ''}</td>
-                    <td class="p-3 text-right font-semibold">R$ ${s.total.toFixed(2).replace('.',',')}</td>
-                </tr>
-            `).join('');
-
-            const receivablesRows = clientReceivables.map(r => {
-                const isOverdue = r.status === 'Pendente' && r.dueDate.toDate() < new Date();
-                const statusClass = r.status === 'Pago' ? 'bg-green-100 text-green-800' : (isOverdue ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800');
-                return `
-                    <tr class="border-b">
-                        <td class="p-3 ${isOverdue ? 'font-bold' : ''}">${r.dueDate.toDate().toLocaleDateString('pt-BR')}</td>
-                        <td class="p-3 text-right">R$ ${r.amount.toFixed(2).replace('.',',')}</td>
-                        <td class="p-3 text-center">${r.installmentNumber}/${r.totalInstallments}</td>
-                        <td class="p-3 text-center"><span class="px-2 py-1 text-xs font-semibold rounded-full ${statusClass}">${isOverdue ? 'Vencido' : r.status}</span></td>
-                        <td class="p-3 text-center">${r.paymentDate ? r.paymentDate.toDate().toLocaleDateString('pt-BR') : '-'}</td>
-                    </tr>
-                `
-            }).join('');
-            
-            const latePaymentWarning = (client.latePaymentsCount || 0) >= 3 ? `<div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-100" role="alert"><span class="font-medium">Atenção!</span> Cliente com histórico de ${client.latePaymentsCount} pagamentos em atraso. Cautela ao vender a prazo.</div>` : '';
-
-            return `
-                <div class="mb-6"><button id="btn-back-to-clients" class="flex items-center gap-2 text-slate-600 hover:text-brand-pink"><i data-lucide="arrow-left"></i> Voltar para Clientes</button></div>
-                <h2 class="text-3xl font-bold text-slate-800">${client.name}</h2>
-                <div class="text-slate-500 mb-6">
-                    <p>CPF: ${client.cpf || 'Não informado'}</p>
-                    <p>Telefone: ${client.phone || 'Não informado'}</p>
-                    <p>Endereço: ${client.address || 'Não informado'}</p>
-                </div>
-                ${latePaymentWarning}
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="bg-white p-4 rounded-lg shadow">
-                        <h3 class="text-xl font-bold mb-4">Situação Financeira (A Prazo)</h3>
-                        <div class="overflow-x-auto max-h-96">
-                            <table class="w-full text-sm">
-                                <thead><tr><th class="p-3 text-left">Vencimento</th><th class="p-3 text-right">Valor</th><th class="p-3 text-center">Parcela</th><th class="p-3 text-center">Status</th><th class="p-3 text-center">Data Pag.</th></tr></thead>
-                                <tbody>${receivablesRows || `<tr><td colspan="5" class="p-4 text-center">Nenhuma compra a prazo.</td></tr>`}</tbody>
-                            </table>
-                        </div>
-                    </div>
-                     <div class="bg-white p-4 rounded-lg shadow">
-                        <h3 class="text-xl font-bold mb-4">Histórico de Compras</h3>
-                        <div class="overflow-x-auto max-h-96">
-                            <table class="w-full text-sm">
-                                <thead><tr><th class="p-3 text-left">Data</th><th class="p-3 text-left">Itens</th><th class="p-3 text-left">Pagamento</th><th class="p-3 text-right">Total</th></tr></thead>
-                                <tbody>${salesRows || `<tr><td colspan="4" class="p-4 text-center">Nenhuma compra registrada.</td></tr>`}</tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        
-        function renderProdutos() {
-            const productsByBrand = state.products.reduce((acc, p) => { const brand = p.brand || 'Sem Marca'; if (!acc[brand]) acc[brand] = []; acc[brand].push(p); return acc; }, {});
-            const brandHtml = Object.entries(productsByBrand).map(([brand, products]) => `<div class="mb-8"><h3 class="text-xl font-bold text-slate-700 mb-4 border-b pb-2">${brand}</h3><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">${products.map(pr => `
-            <div class="bg-white p-4 rounded-lg shadow-md border flex flex-col justify-between">
-                <div>
-                    <p class="font-bold text-lg">${pr.name}</p>
-                    <p class="text-sm">Custo: <span class="font-semibold text-red-600">R$ ${parseFloat(pr.cost||0).toFixed(2).replace('.',',')}</span></p>
-                    <p class="text-sm">Preço: <span class="font-semibold text-green-600">R$ ${parseFloat(pr.price).toFixed(2).replace('.',',')}</span></p>
-                    <p class="text-sm">Estoque: <span class="font-semibold">${pr.quantity}</span></p>
-                    ${pr.validityDate ? `<p class="text-sm">Validade: <span class="font-semibold">${pr.validityDate.toDate().toLocaleDateString('pt-BR')}</span></p>` : ''}
-                </div>
-                <div class="mt-4 pt-4 border-t flex justify-end gap-2">
-                    <button class="btn-edit-product p-2 text-blue-500 hover:bg-blue-100 rounded-full" data-product-id="${pr.id}"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                    <button class="btn-delete-product p-2 text-red-500 hover:bg-red-100 rounded-full" data-product-id="${pr.id}"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                </div>
-            </div>`).join('')}</div></div>`).join('');
-            return `<div class="flex justify-between items-center mb-6 flex-wrap gap-4"><h2 class="text-3xl font-bold text-slate-800">Produtos</h2><button id="btn-new-product" class="bg-pink-400 text-white px-5 py-3 rounded-lg font-semibold hover:bg-pink-500 flex items-center"><i data-lucide="plus" class="w-5 h-5 mr-2"></i> Novo Produto</button></div>${state.products.length > 0 ? brandHtml : '<div class="bg-white p-6 rounded-lg shadow text-center">Nenhum produto cadastrado.</div>'}`;
-        }
-        
-        function renderCompras() {
-            const pendingOrders = state.purchaseOrders.filter(p => p.status === 'Pendente');
-            const receivedOrders = state.purchaseOrders.filter(p => p.status === 'Recebido');
-
-            const pendingRows = pendingOrders.map(p => `
-                <tr class="border-b">
-                    <td class="p-4">${p.date.toDate().toLocaleDateString('pt-BR')}</td>
-                    <td class="p-4 font-medium">${p.supplier}</td>
-                    <td class="p-4 text-center">${p.items.reduce((a,i)=>a+i.quantity,0)}</td>
-                    <td class="p-4 text-right font-semibold">R$ ${p.totalCost.toFixed(2).replace('.',',')}</td>
-                    <td class="p-4 text-center"><span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-200 rounded-full">${p.status}</span></td>
-                    <td class="p-4 flex justify-center items-center gap-1">
-                        <button data-order-id="${p.id}" class="btn-receive-order bg-green-500 text-white px-3 py-1 rounded-lg text-xs font-semibold hover:bg-green-600">Receber</button>
-                        <button data-order-id="${p.id}" class="btn-edit-order p-2 text-blue-500"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                        <button data-order-id="${p.id}" class="btn-delete-order p-2 text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-
-            const receivedRows = receivedOrders.map(p => `
-                 <tr class="border-b bg-slate-50 text-slate-500">
-                    <td class="p-4">${p.date.toDate().toLocaleDateString('pt-BR')}</td>
-                    <td class="p-4 font-medium">${p.supplier}</td>
-                    <td class="p-4 text-center">${p.items.reduce((a,i)=>a+i.quantity,0)}</td>
-                    <td class="p-4 text-right font-semibold">R$ ${p.totalCost.toFixed(2).replace('.',',')}</td>
-                    <td class="p-4 text-center"><span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-200 rounded-full">${p.status}</span></td>
-                    <td class="p-4 text-center">-</td>
-                </tr>
-            `).join('');
-
-            return `
-                <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
-                    <h2 class="text-3xl font-bold text-slate-800">Pedidos de Compra</h2>
-                    <button id="btn-new-purchase-order" class="bg-pink-400 text-white px-5 py-3 rounded-lg font-semibold hover:bg-pink-500 flex items-center">
-                        <i data-lucide="plus" class="w-5 h-5 mr-2"></i> Novo Pedido
-                    </button>
-                </div>
-                <div class="bg-white rounded-lg shadow overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead>
-                                <tr>
-                                    <th class="p-4 text-left">Data</th>
-                                    <th class="p-4 text-left">Fornecedor</th>
-                                    <th class="p-4 text-center">Itens</th>
-                                    <th class="p-4 text-right">Custo Total</th>
-                                    <th class="p-4 text-center">Status</th>
-                                    <th class="p-4 text-center">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${pendingRows || ''}
-                                ${receivedRows || ''}
-                                ${state.purchaseOrders.length === 0 ? '<tr><td colspan="6" class="p-4 text-center">Nenhum pedido de compra.</td></tr>' : ''}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-        }
-        function renderEstoque() {
-            const salesCount = state.sales.flatMap(s => s.items).reduce((a, i) => { a[i.productId] = (a[i.productId] || 0) + i.quantity; return a; }, {});
-            const productsWithSales = state.products.map(p => ({ ...p, sold: salesCount[p.id] || 0 })).sort((a, b) => b.sold - a.sold);
-            const stockRows = productsWithSales.map(pr => `<tr class="border-b"><td class="p-4 font-medium">${pr.name}</td><td class="p-4 hidden sm:table-cell">${pr.brand||'N/A'}</td><td class="p-4 text-center font-semibold ${pr.quantity<=5?'text-red-500':'text-slate-700'}">${pr.quantity}</td><td class="p-4 text-center font-semibold text-blue-600">${pr.sold}</td><td class="p-4 text-center"><button data-product-id="${pr.id}" data-action="add" class="btn-stock-update p-2 text-green-500"><i data-lucide="plus-circle" class="w-5 h-5"></i></button><button data-product-id="${pr.id}" data-action="remove" class="btn-stock-update p-2 text-red-500"><i data-lucide="minus-circle" class="w-5 h-5"></i></button></td></tr>`).join('');
-            return `<h2 class="text-3xl font-bold text-slate-800 mb-6">Controle de Estoque</h2><div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><div class="bg-white rounded-lg shadow overflow-hidden"><div class="p-4"><h3 class="text-lg font-bold">Análise de Saída</h3></div><div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr><th class="p-4">Produto</th><th class="p-4 hidden sm:table-cell">Marca</th><th class="p-4 text-center">Estoque</th><th class="p-4 text-center">Vendidos</th><th class="p-4 text-center">Ajustar</th></tr></thead><tbody>${stockRows||'<tr><td colspan="5" class="p-4 text-center">Nenhum produto.</td></tr>'}</tbody></table></div></div><div class="bg-white rounded-lg shadow p-6"><h3 class="text-lg font-bold mb-4">Produtos Mais Vendidos</h3><canvas id="salesChart"></canvas></div></div>`;
-        }
-        function renderSalesChart() {
-            const ctx = document.getElementById('salesChart');
-            if (!ctx) return;
-            const salesCount = state.sales.flatMap(sale => sale.items).reduce((acc, item) => { acc[item.productName] = (acc[item.productName] || 0) + item.quantity; return acc; }, {});
-            const sortedProducts = Object.entries(salesCount).sort(([,a],[,b]) => b-a).slice(0, 10);
-            if (salesChart) salesChart.destroy();
-            salesChart = new Chart(ctx, { type: 'bar', data: { labels: sortedProducts.map(([name]) => name), datasets: [{ label: 'Unidades Vendidas', data: sortedProducts.map(([, count]) => count), backgroundColor: 'rgba(244, 114, 182, 0.6)', borderColor: 'rgba(244, 114, 182, 1)', borderWidth: 1 }] }, options: { indexAxis: 'y', scales: { x: { beginAtZero: true } }, responsive: true, plugins: { legend: { display: false }, title: { display: true, text: 'Top 10 Produtos por Unidades Vendidas' } } } });
-        }
-        function renderVendas() {
-            const filterDate = document.getElementById('filter-date-vendas')?.value || new Date().toISOString().slice(0, 10);
-            const filteredSales = state.sales.filter(s => s.date.toDate().toISOString().slice(0, 10) === filterDate);
-
-            const salesRows = filteredSales.sort((a, b) => b.date.toDate() - a.date.toDate()).map(s => { 
-                const c = state.clients.find(cl => cl.id === s.clientId); 
-                return `<tr class="border-b">
-                    <td class="p-4">${s.date.toDate().toLocaleDateString('pt-BR')}</td>
-                    <td class="p-4 font-medium">${c?c.name:'Consumidor'}</td>
-                    <td class="p-4 text-center hidden sm:table-cell">${s.items.reduce((a,i)=>a+i.quantity,0)}</td>
-                    <td class="p-4 text-right font-semibold text-green-600">R$ ${s.total.toFixed(2).replace('.',',')}</td>
-                    <td class="p-4 hidden md:table-cell">${s.paymentMethod} ${s.installmentsCount ? `(${s.installmentsCount}x)` : ''}</td>
-                    <td class="p-4 hidden lg:table-cell">${s.sellerName||'N/A'}</td>
-                    <td class="p-4 flex gap-2 justify-center">
-                        <button class="btn-edit-sale p-2 text-blue-500" data-sale-id="${s.id}"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                        <button class="btn-delete-sale p-2 text-red-500" data-sale-id="${s.id}"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </td>
-                </tr>`; 
-            }).join('');
-            return `
-                <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
-                    <h2 class="text-3xl font-bold text-slate-800">Registro de Vendas</h2>
-                    <div class="flex items-center gap-4">
-                         <input type="date" id="filter-date-vendas" value="${filterDate}" class="px-3 py-2 border rounded-md">
-                        <button id="btn-new-sale" class="bg-pink-400 text-white px-5 py-3 rounded-lg font-semibold hover:bg-pink-500 flex items-center"><i data-lucide="plus" class="w-5 h-5 mr-2"></i> Nova Venda</button>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr><th class="p-4 text-left">Data</th><th class="p-4 text-left">Cliente</th><th class="p-4 text-center hidden sm:table-cell">Itens</th><th class="p-4 text-right">Total</th><th class="p-4 hidden md:table-cell">Pagamento</th><th class="p-4 hidden lg:table-cell">Vendedor</th><th class="p-4 text-center">Ações</th></tr></thead><tbody>${salesRows||`<tr><td colspan="7" class="p-4 text-center">Nenhuma venda para esta data.</td></tr>`}</tbody></table></div></div>`;
-        }
-        function renderOrcamentos() {
-            const filterDate = document.getElementById('filter-date-orcamentos')?.value || new Date().toISOString().slice(0, 10);
-            const filteredQuotes = state.quotes.filter(q => q.date.toDate().toISOString().slice(0, 10) === filterDate);
-            
-            const quoteRows = filteredQuotes.sort((a, b) => b.date.toDate() - a.date.toDate()).map(q => { 
-                const c = state.clients.find(cl => cl.id === q.clientId); 
-                return `<tr class="border-b">
-                    <td class="p-4">${q.date.toDate().toLocaleDateString('pt-BR')}</td>
-                    <td class="p-4 font-medium">${c?c.name:'Consumidor'}</td>
-                    <td class="p-4 text-center">${q.items.reduce((a,i)=>a+i.quantity,0)}</td>
-                    <td class="p-4 text-right font-semibold text-blue-600">R$ ${q.total.toFixed(2).replace('.',',')}</td>
-                    <td class="p-4 flex gap-2 justify-center">
-                        <button data-quote-id="${q.id}" class="btn-convert-quote bg-green-500 text-white px-3 py-1 rounded-lg text-xs font-semibold hover:bg-green-600">Vender</button>
-                        <button class="btn-edit-quote p-2 text-blue-500" data-quote-id="${q.id}"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                        <button class="btn-delete-quote p-2 text-red-500" data-quote-id="${q.id}"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </td>
-                </tr>`; 
-            }).join('');
-            return `
-                <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
-                    <h2 class="text-3xl font-bold text-slate-800">Orçamentos</h2>
-                     <div class="flex items-center gap-4">
-                         <input type="date" id="filter-date-orcamentos" value="${filterDate}" class="px-3 py-2 border rounded-md">
-                        <button id="btn-new-quote" class="bg-pink-400 text-white px-5 py-3 rounded-lg font-semibold hover:bg-pink-500 flex items-center"><i data-lucide="plus" class="w-5 h-5 mr-2"></i> Novo Orçamento</button>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr><th class="p-4 text-left">Data</th><th class="p-4 text-left">Cliente</th><th class="p-4 text-center">Itens</th><th class="p-4 text-right">Total</th><th class="p-4 text-center">Ações</th></tr></thead><tbody>${quoteRows||`<tr><td colspan="5" class="p-4 text-center">Nenhum orçamento para esta data.</td></tr>`}</tbody></table></div></div>`;
-        }
-        
-        function renderCobranca() {
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const pendingReceivables = state.receivables.filter(r => r.status === 'Pendente');
-
-            const clientsWithDebts = pendingReceivables.reduce((acc, receivable) => {
-                const clientId = receivable.clientId;
-                if (!acc[clientId]) {
-                    const client = state.clients.find(c => c.id === clientId);
-                    if (client) {
-                        acc[clientId] = { client, receivables: [], totalDebt: 0, isOverdue: false };
-                    }
-                }
-                if (acc[clientId]) {
-                    acc[clientId].receivables.push(receivable);
-                    acc[clientId].totalDebt += receivable.amount;
-                    if (receivable.dueDate.toDate() < today) {
-                        acc[clientId].isOverdue = true;
-                    }
-                }
+            // 2. Gráfico de Categoria
+            const categoryCounts = clients.reduce((acc, client) => {
+                acc[client.categoria] = (acc[client.categoria] || 0) + 1;
                 return acc;
             }, {});
-            
-            const clientList = Object.values(clientsWithDebts).sort((a,b) => {
-                if (a.isOverdue && !b.isOverdue) return -1;
-                if (!a.isOverdue && b.isOverdue) return 1;
-                return a.client.name.localeCompare(b.client.name);
+            categoryChartInstance = new Chart(document.getElementById('categoryChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categoryCounts),
+                    datasets: [{
+                        data: Object.values(categoryCounts),
+                        backgroundColor: ['#8B5CF6', '#F59E0B', '#EF4444', '#6B7280', '#3B82F6', '#14B8A6'],
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
             });
 
-            const rows = clientList.map(data => {
-                const { client, receivables, totalDebt, isOverdue } = data;
-                
-                const detailsRows = receivables.sort((a,b) => a.dueDate.toDate() - b.dueDate.toDate()).map(r => `
-                    <tr class="bg-slate-50 hover:bg-slate-100">
-                        <td class="p-2 pl-12 font-semibold ${r.dueDate.toDate() < today ? 'text-red-500' : ''}">${r.dueDate.toDate().toLocaleDateString('pt-BR')}</td>
-                        <td class="p-2 text-center">${r.installmentNumber}/${r.totalInstallments}</td>
-                        <td class="p-2 text-right">R$ ${r.amount.toFixed(2).replace('.', ',')}</td>
-                        <td class="p-2 text-center flex items-center justify-center gap-2">
-                            <button data-receivable-id="${r.id}" data-client-id="${r.clientId}" class="btn-settle-receivable bg-green-500 text-white px-3 py-1 rounded text-xs font-semibold hover:bg-green-600">Receber</button>
-                            <button data-receivable-id="${r.id}" class="btn-edit-receivable p-1 text-blue-500 hover:bg-blue-100 rounded-full" title="Editar Parcela"><i data-lucide="pencil" class="w-4 h-4"></i></button>
-                            <button data-receivable-id="${r.id}" class="btn-delete-receivable p-1 text-red-500 hover:bg-red-100 rounded-full" title="Excluir Parcela"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        </td>
-                    </tr>
-                `).join('');
-
-                return `
-                    <tbody class="client-group">
-                        <tr class="border-b bg-white">
-                            <td class="p-4 font-bold ${isOverdue ? 'text-red-600' : ''}">${client.name}</td>
-                            <td class="p-4 text-center">${receivables.length}</td>
-                            <td class="p-4 text-right font-bold">R$ ${totalDebt.toFixed(2).replace('.', ',')}</td>
-                            <td class="p-4 text-center flex items-center justify-center gap-2">
-                                 <button class="btn-toggle-details p-2 text-slate-500 hover:bg-slate-200 rounded-full" data-client-id="${client.id}" title="Ver Parcelas"><i data-lucide="chevron-down" class="w-5 h-5"></i></button>
-                                 <button class="btn-view-profile p-2 text-green-600 hover:bg-green-100 rounded-full" data-client-id="${client.id}" title="Ver Perfil"><i data-lucide="eye" class="w-5 h-5"></i></button>
-                                 <button class="btn-edit-client p-2 text-blue-500 hover:bg-blue-100 rounded-full" data-client-id="${client.id}" title="Editar Cliente"><i data-lucide="edit" class="w-5 h-5"></i></button>
-                                 <button class="btn-delete-client p-2 text-red-500 hover:bg-red-100 rounded-full" data-client-id="${client.id}" title="Excluir Cliente"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
-                            </td>
-                        </tr>
-                        <tr class="details-row hidden" data-details-for="${client.id}">
-                            <td colspan="4" class="p-0 bg-slate-50">
-                                <table class="w-full text-sm">
-                                    ${detailsRows}
-                                </table>
-                            </td>
-                        </tr>
-                    </tbody>
-                `;
-            }).join('');
-
-            return `
-                <h2 class="text-3xl font-bold text-slate-800 mb-6">Controle de Cobrança (Contas a Receber)</h2>
-                <div class="bg-white rounded-lg shadow overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead class="bg-slate-100">
-                                <tr>
-                                    <th class="p-4 text-left">Cliente</th>
-                                    <th class="p-4 text-center">Parcelas Pendentes</th>
-                                    <th class="p-4 text-right">Dívida Total</th>
-                                    <th class="p-4 text-center">Ações</th>
-                                </tr>
-                            </thead>
-                            ${rows || '<tbody><tr><td colspan="4" class="p-4 text-center">Nenhuma conta a receber pendente.</td></tr></tbody>'}
-                        </table>
-                    </div>
-                </div>`;
-        }
-        function renderOpcoes() {
-            const userRows = state.users.filter(u => u.username !== 'Admin').map(user => `<tr class="border-b"><td class="p-4 font-medium">${user.username}</td><td class="p-4">${user.role}</td><td class="p-4 flex gap-2"><button class="btn-edit-user p-2 text-blue-500" data-user-id="${user.id}"><i data-lucide="key" class="w-5 h-5"></i></button><button class="btn-delete-user p-2 text-red-500" data-user-id="${user.id}"><i data-lucide="trash-2" class="w-5 h-5"></i></button></td></tr>`).join('');
-            const onlineUserRows = state.onlineUsers.map(user => `<li class="flex items-center gap-2"><span class="w-2 h-2 bg-green-500 rounded-full"></span><span>${user.username}</span></li>`).join('');
-            return `
-                <h2 class="text-3xl font-bold text-slate-800 mb-6">Opções do Sistema</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="md:col-span-2 bg-white p-6 rounded-lg shadow">
-                        <h3 class="text-xl font-bold text-slate-800 mb-4">Gerenciar Usuários</h3>
-                        <button id="btn-new-user" class="w-full mb-4 bg-pink-400 text-white px-5 py-3 rounded-lg font-semibold hover:bg-pink-500 flex items-center justify-center"><i data-lucide="user-plus" class="w-5 h-5 mr-2"></i> Novo Usuário</button>
-                        <div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr><th class="p-4 text-left">Usuário</th><th class="p-4 text-left">Função</th><th class="p-4 text-left">Ações</th></tr></thead><tbody>${userRows||'<tr><td colspan="3" class="p-4 text-center">Nenhum usuário.</td></tr>'}</tbody></table></div>
-                    </div>
-                    <div class="space-y-6">
-                        <div class="bg-white p-6 rounded-lg shadow">
-                            <h3 class="text-xl font-bold text-slate-800 mb-4">Usuários Online</h3>
-                            <ul class="space-y-2">${onlineUserRows||'<li class="text-slate-500">Nenhum usuário online.</li>'}</ul>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg shadow">
-                            <h3 class="text-xl font-bold text-slate-800 mb-4">Backup Manual</h3>
-                            <p class="text-sm text-slate-500 mb-4">Baixe um arquivo com todos os dados do sistema. Guarde em um local seguro.</p>
-                            <button id="btn-manual-backup" class="w-full bg-blue-500 text-white px-5 py-3 rounded-lg font-semibold hover:bg-blue-600 flex items-center justify-center">
-                                <i data-lucide="download-cloud" class="w-5 h-5 mr-2"></i> Baixar Arquivo de Backup
-                            </button>
-                        </div>
-                    </div>
-                </div>`;
+            // 3. Gráfico de Vendedor
+            const sellerCounts = clients.reduce((acc, client) => {
+                const sellerName = client.vendedor || 'Não atribuído';
+                acc[sellerName] = (acc[sellerName] || 0) + 1;
+                return acc;
+            }, {});
+            sellerChartInstance = new Chart(document.getElementById('sellerChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(sellerCounts),
+                    datasets: [{
+                        data: Object.values(sellerCounts),
+                        backgroundColor: ['#3B82F6', '#10B981', '#F97316', '#8B5CF6', '#D946EF'],
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
         }
         
-        function renderContasAPagar() {
-            const pendingExpenses = state.expenses.filter(e => e.status === 'Pendente').sort((a,b) => a.dueDate.toDate() - b.dueDate.toDate());
-            const paidExpenses = state.expenses.filter(e => e.status === 'Pago').sort((a,b) => b.paymentDate ? b.paymentDate.toDate() - a.date.toDate() : -1);
+        // --- Lógica do Modal e CRUD ---
+        function openModalForEdit(clientId) {
+            const clientData = allClientsData.find(c => c.id === clientId);
+            if (!clientData) return;
 
-             const pendingRows = pendingExpenses.map(exp => {
-                 const category = state.expenseCategories.find(c => c.id === exp.categoryId);
-                 const isFromPurchase = !!exp.purchaseOrderId;
-                 return `<tr class="border-b">
-                     <td class="p-4">${exp.date.toDate().toLocaleDateString('pt-BR')}</td>
-                     <td class="p-4 font-semibold text-red-500">${exp.dueDate.toDate().toLocaleDateString('pt-BR')}</td>
-                     <td class="p-4 font-medium">${exp.description}</td>
-                     <td class="p-4 hidden sm:table-cell">${category?.name || 'N/A'}</td>
-                     <td class="p-4 text-right font-semibold text-red-600">R$ ${exp.amount.toFixed(2).replace('.',',')}</td>
-                     <td class="p-4 flex justify-center items-center gap-1">
-                         <button data-expense-id="${exp.id}" class="btn-settle-expense bg-green-500 text-white px-3 py-1 rounded-lg text-xs font-semibold hover:bg-green-600">Baixar</button>
-                         <button data-expense-id="${exp.id}" class="btn-edit-expense p-2 text-blue-500" ${isFromPurchase ? 'disabled title="Gerencie através do Pedido de Compra"' : ''}><i data-lucide="edit" class="w-4 h-4"></i></button>
-                         <button data-expense-id="${exp.id}" class="btn-delete-expense p-2 text-red-500" ${isFromPurchase ? 'disabled title="Gerencie através do Pedido de Compra"' : ''}><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                     </td>
-                 </tr>`
-             }).join('');
-
-            const paidRows = paidExpenses.map(exp => {
-                const category = state.expenseCategories.find(c => c.id === exp.categoryId);
-                return `<tr class="border-b bg-slate-50 text-slate-500">
-                    <td class="p-4">${exp.date.toDate().toLocaleDateString('pt-BR')}</td>
-                    <td class="p-4">${exp.dueDate.toDate().toLocaleDateString('pt-BR')}</td>
-                    <td class="p-4 font-medium">${exp.description}</td>
-                    <td class="p-4 hidden sm:table-cell">${category?.name || 'N/A'}</td>
-                    <td class="p-4 text-right font-semibold">R$ ${exp.amount.toFixed(2).replace('.',',')}</td>
-                    <td class="p-4 text-center text-green-600 font-bold">Pago em ${exp.paymentDate ? exp.paymentDate.toDate().toLocaleDateString('pt-BR') : 'N/A'}</td>
-                </tr>`
-             }).join('');
-
-            return `
-                 <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
-                     <h2 class="text-3xl font-bold text-slate-800">Contas a Pagar</h2>
-                     <div class="flex items-center gap-4">
-                         <button id="btn-manage-categories" class="bg-slate-500 text-white px-5 py-3 rounded-lg font-semibold hover:bg-slate-600 flex items-center">
-                             <i data-lucide="settings-2" class="w-5 h-5 mr-2"></i> Gerenciar Categorias
-                         </button>
-                         <button id="btn-new-expense" class="bg-pink-400 text-white px-5 py-3 rounded-lg font-semibold hover:bg-pink-500 flex items-center">
-                             <i data-lucide="plus" class="w-5 h-5 mr-2"></i> Nova Despesa
-                         </button>
-                     </div>
-                 </div>
-
-                 <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
-                     <h3 class="text-xl font-bold p-4 bg-slate-100 border-b">Contas Pendentes</h3>
-                     <div class="overflow-x-auto">
-                         <table class="w-full text-sm">
-                             <thead><tr><th class="p-4 text-left">Data Lanç.</th><th class="p-4 text-left">Vencimento</th><th class="p-4 text-left">Descrição</th><th class="p-4 hidden sm:table-cell">Categoria</th><th class="p-4 text-right">Valor</th><th class="p-4 text-center">Ações</th></tr></thead>
-                             <tbody>${pendingRows||'<tr><td colspan="6" class="p-4 text-center">Nenhuma conta pendente.</td></tr>'}</tbody>
-                         </table>
-                     </div>
-                 </div>
-
-                  <div class="bg-white rounded-lg shadow overflow-hidden">
-                     <h3 class="text-xl font-bold p-4 bg-slate-100 border-b">Contas Pagas</h3>
-                     <div class="overflow-x-auto">
-                         <table class="w-full text-sm">
-                             <thead><tr><th class="p-4 text-left">Data Lanç.</th><th class="p-4 text-left">Vencimento</th><th class="p-4 text-left">Descrição</th><th class="p-4 hidden sm:table-cell">Categoria</th><th class="p-4 text-right">Valor</th><th class="p-4 text-center">Status</th></tr></thead>
-                             <tbody>${paidRows||'<tr><td colspan="6" class="p-4 text-center">Nenhuma conta paga.</td></tr>'}</tbody>
-                         </table>
-                     </div>
-                 </div>
-            `;
-        }
-
-        // --- MODAIS E FORMULÁRIOS ---
-        
-        function openModal(content, maxWidth = 'max-w-lg') {
-            const modalContainer = document.getElementById('modal-container');
-            const modalContent = document.getElementById('modal-content');
-            modalContent.className = `bg-white rounded-lg shadow-xl w-full ${maxWidth} p-6 m-4 max-h-[90vh] overflow-y-auto`;
-            modalContent.innerHTML = content;
-            modalContainer.classList.remove('hidden');
-            lucide.createIcons();
-            addModalEventListeners();
-        }
-
-        function closeModal() {
-            document.getElementById('modal-container').classList.add('hidden');
-            document.getElementById('modal-content').innerHTML = '';
-        }
-        
-        function showNewClientModal() { openModal(getFormClient(), 'max-w-lg'); }
-        function showEditClientModal(client) { openModal(getFormClient(client), 'max-w-lg'); }
-        
-        function getFormClient(client = null) {
-            return `
-                <form id="form-client">
-                    <h3 class="text-2xl font-bold mb-4">${client ? 'Editar' : 'Cadastrar'} Cliente</h3>
-                    <input type="hidden" name="id" value="${client?.id || ''}">
-                    <div class="space-y-4">
-                        <div><label class="block text-sm font-medium">Nome Completo*</label><input type="text" name="name" required value="${client?.name || ''}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                        <div><label class="block text-sm font-medium">CPF</label><input type="text" name="cpf" value="${client?.cpf || ''}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                        <div><label class="block text-sm font-medium">Telefone</label><input type="tel" name="phone" value="${client?.phone || ''}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                        <div><label class="block text-sm font-medium">Endereço</label><input type="text" name="address" value="${client?.address || ''}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                    </div>
-                    <div class="mt-6 flex justify-end space-x-3"><button type="button" id="btn-cancel-modal" class="px-5 py-3 bg-slate-200 rounded-lg">Cancelar</button><button type="submit" class="px-5 py-3 bg-pink-400 text-white rounded-lg">Salvar</button></div>
-                </form>`;
-        }
-        
-        function showNewProductModal() { openModal(getFormProduct(), 'max-w-lg'); }
-        function showEditProductModal(product) { openModal(getFormProduct(product), 'max-w-lg'); }
-        
-        function getFormProduct(product = null) {
-            const validityDateValue = product?.validityDate ? product.validityDate.toDate().toISOString().slice(0, 10) : '';
-            return `
-                <form id="form-product">
-                    <h3 class="text-2xl font-bold mb-4">${product ? 'Editar' : 'Novo'} Produto</h3>
-                    <input type="hidden" name="id" value="${product?.id || ''}">
-                    <div class="space-y-4">
-                        <div><label class="block text-sm font-medium">Nome*</label><input type="text" name="name" required value="${product?.name || ''}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                        <div><label class="block text-sm font-medium">Marca</label><input type="text" name="brand" value="${product?.brand || ''}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-medium">Custo (R$)*</label><input type="number" name="cost" required min="0" step="0.01" value="${product?.cost || ''}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                            <div><label class="block text-sm font-medium">Preço (R$)*</label><input type="number" name="price" required min="0" step="0.01" value="${product?.price || ''}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                        </div>
-                         <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-medium">Quantidade*</label><input type="number" name="quantity" required min="0" value="${product?.quantity || 0}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                            <div><label class="block text-sm font-medium">Data de Validade</label><input type="date" name="validityDate" value="${validityDateValue}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                        </div>
-                    </div>
-                    <div class="mt-6 flex justify-end space-x-3"><button type="button" id="btn-cancel-modal" class="px-5 py-3 bg-slate-200 rounded-lg">Cancelar</button><button type="submit" class="px-5 py-3 bg-pink-400 text-white rounded-lg">Salvar</button></div>
-                </form>
-            `;
-        }
-        
-        function getTransactionForm(type = 'quote', transaction = null) {
-            const isSale = type === 'sale';
-            const title = `${transaction ? 'Editar' : 'Nova'} ${isSale ? 'Venda' : 'Orçamento'}`;
-            const buttonText = transaction ? 'Salvar Alterações' : (isSale ? 'Finalizar Venda' : 'Salvar Orçamento');
+            editingClientId = clientId;
+            modalTitle.textContent = "Editar Cliente";
+            document.getElementById('empresa').value = clientData.empresa || '';
+            document.getElementById('endereco').value = clientData.endereco || '';
+            document.getElementById('telefone').value = clientData.telefone || '';
+            document.getElementById('email').value = clientData.email || '';
+            document.getElementById('vendedor').value = clientData.vendedor || '';
+            document.getElementById('categoria').value = clientData.categoria || 'Funilaria';
             
-            const clientOptions = state.clients.map(c => `<option value="${c.id}" ${transaction?.clientId === c.id || state.quoteToConvert?.clientId === c.id ? 'selected' : ''}>${c.code} - ${c.name}</option>`).join('');
-            const productOptions = state.products.map(p => `<option value="${p.id}">${p.name} (Est: ${p.quantity}) - R$ ${parseFloat(p.price).toFixed(2)}</option>`).join('');
-
-            return `
-                <form id="form-${type}">
-                    <input type="hidden" name="id" value="${transaction?.id || ''}">
-                    <h3 class="text-2xl font-bold mb-4">${title}</h3>
-                    <div class="mb-4"><label class="block text-sm font-medium">Cliente*</label><select name="clientId" required class="w-full mt-1 px-3 py-2 border rounded-md"><option value="consumidor">Consumidor</option>${clientOptions}</select></div>
-                    <div class="mb-4 border rounded-lg p-4"><h4 class="font-semibold mb-2">Itens</h4><div id="transaction-items-container" class="space-y-2 max-h-48 overflow-y-auto"></div><div class="flex items-center space-x-2 mt-3"><select id="select-product-to-add" class="flex-grow mt-1 px-3 py-2 border rounded-md"><option value="">Selecione um produto...</option>${productOptions}</select><button type="button" id="btn-add-transaction-item" class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"><i data-lucide="plus"></i></button></div></div>
-                    <div class="border rounded-lg p-4">
-                        <div class="grid grid-cols-2 gap-x-4 gap-y-2">
-                            <p class="text-sm text-slate-500">Subtotal</p><p id="transaction-subtotal" class="text-sm text-right font-medium">R$ 0,00</p>
-                            <div><label class="block text-sm font-medium">Desconto (%)</label><input type="number" id="discount-percent" value="${transaction?.discountPercent || ''}" min="0" max="100" step="0.1" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                            <div><label class="block text-sm font-medium">Desconto (R$)</label><input type="number" id="discount-value" value="${transaction?.discountValue || ''}" min="0" step="0.01" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                        </div>
-                        <div class="mt-4 pt-4 border-t flex justify-between items-center">
-                            <p class="text-lg font-bold">TOTAL</p><p id="transaction-total" class="text-3xl font-bold text-green-600">R$ 0,00</p>
-                        </div>
-                    </div>
-                    ${isSale ? `
-                    <div class="mt-4">
-                        <label class="block text-sm font-medium">Pagamento*</label>
-                        <select name="paymentMethod" required class="w-full mt-1 px-3 py-2 border rounded-md">
-                            <option value="Dinheiro" ${transaction?.paymentMethod === 'Dinheiro' ? 'selected' : ''}>Dinheiro</option>
-                            <option value="Pix" ${transaction?.paymentMethod === 'Pix' ? 'selected' : ''}>Pix</option>
-                            <option value="Cartão de Débito" ${transaction?.paymentMethod === 'Cartão de Débito' ? 'selected' : ''}>Débito</option>
-                            <option value="Cartão de Crédito" ${transaction?.paymentMethod === 'Cartão de Crédito' ? 'selected' : ''}>Crédito</option>
-                            <option value="A Prazo" ${transaction?.paymentMethod === 'A Prazo' ? 'selected' : ''}>A Prazo</option>
-                        </select>
-                    </div>
-                    <div id="installments-container" class="mt-4 hidden">
-                        <label class="block text-sm font-medium">Nº de Parcelas*</label>
-                        <input type="number" name="installmentsCount" min="1" value="${transaction?.installmentsCount || 1}" class="w-full mt-1 px-3 py-2 border rounded-md">
-                    </div>` : ''}
-                    <div id="transaction-error" class="text-red-500 text-sm text-center mt-4 hidden"></div>
-                    <div class="mt-6 flex justify-end space-x-3"><button type="button" id="btn-cancel-modal" class="px-5 py-3 bg-slate-200 rounded-lg">Cancelar</button><button type="submit" class="px-5 py-3 bg-pink-400 text-white rounded-lg">${buttonText}</button></div>
-                </form>`;
+            clientModal.classList.remove('hidden');
         }
+
+        addClientBtn.addEventListener('click', () => {
+            editingClientId = null;
+            modalTitle.textContent = "Adicionar Novo Cliente";
+            clientForm.reset();
+            clientModal.classList.remove('hidden');
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            clientModal.classList.add('hidden');
+            clientForm.reset();
+        });
         
-        function getEditReceivableForm(receivable) {
-             return `
-                <form id="form-edit-receivable">
-                    <h3 class="text-2xl font-bold mb-4">Editar Parcela</h3>
-                    <input type="hidden" name="id" value="${receivable.id}">
-                    <div class="p-4 mb-4 text-sm text-orange-800 rounded-lg bg-orange-100" role="alert">
-                        <span class="font-medium">Atenção!</span> Alterar o valor pode criar uma inconsistência com o valor total da venda original.
-                    </div>
-                    <div class="space-y-4">
-                        <div><label class="block text-sm">Cliente:</label> <span class="font-semibold">${receivable.clientName}</span></div>
-                        <div><label class="block text-sm">Parcela:</label> <span class="font-semibold">${receivable.installmentNumber}/${receivable.totalInstallments}</span></div>
-                        <div><label class="block text-sm font-medium">Valor da Parcela (R$)</label><input type="number" name="amount" required min="0.01" step="0.01" value="${receivable.amount.toFixed(2)}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                        <div><label class="block text-sm font-medium">Nova Data de Vencimento</label><input type="date" name="dueDate" required value="${receivable.dueDate.toDate().toISOString().slice(0, 10)}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                    </div>
-                    <div class="mt-6 flex justify-end space-x-3">
-                        <button type="button" id="btn-cancel-modal" class="px-5 py-3 bg-slate-200 rounded-lg">Cancelar</button>
-                        <button type="submit" class="px-5 py-3 bg-blue-500 text-white rounded-lg">Salvar Alterações</button>
-                    </div>
-                </form>
-            `;
-        }
-        
-        function showUserForm(user = null) {
-            openModal(`
-                <form id="form-user">
-                    <h3 class="text-2xl font-bold mb-4">${user ? 'Alterar Senha' : 'Novo Usuário'}</h3>
-                    <input type="hidden" name="id" value="${user?.id || ''}">
-                    <div class="space-y-4">
-                        <div><label class="block text-sm font-medium">Usuário</label><input type="text" name="username" required ${user ? 'readonly' : ''} value="${user?.username || ''}" class="w-full mt-1 px-3 py-2 border rounded-md ${user ? 'bg-slate-100' : ''}"></div>
-                        <div><label class="block text-sm font-medium">Nova Senha*</label><input type="password" name="password" required class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                         ${!user ? `<div><label class="block text-sm font-medium">Função</label><select name="role" class="w-full mt-1 px-3 py-2 border rounded-md"><option value="seller">Vendedor</option><option value="admin">Admin</option></select></div>` : ''}
-                    </div>
-                    <div class="mt-6 flex justify-end space-x-3"><button type="button" id="btn-cancel-modal" class="px-5 py-3 bg-slate-200 rounded-lg">Cancelar</button><button type="submit" class="px-5 py-3 bg-pink-400 text-white rounded-lg">Salvar</button></div>
-                </form>
-            `);
-        }
-        
-        function getPurchaseOrderForm(order = null) {
-            const productOptions = state.products.map(p => `<option value="${p.id}">${p.name} (Custo: R$ ${parseFloat(p.cost || 0).toFixed(2)})</option>`).join('');
-            return `
-                <form id="form-purchase-order">
-                    <input type="hidden" name="id" value="${order?.id || ''}">
-                    <h3 class="text-2xl font-bold mb-4">${order ? 'Editar' : 'Novo'} Pedido de Compra</h3>
-                    <div class="mb-4"><label class="block text-sm font-medium">Fornecedor*</label><input type="text" name="supplier" required value="${order?.supplier || ''}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                    <div class="mb-4 border rounded-lg p-4"><h4 class="font-semibold mb-2">Itens do Pedido</h4><div id="purchase-items-container" class="space-y-2 max-h-48 overflow-y-auto"></div><div class="flex items-center space-x-2 mt-3"><select id="select-product-to-purchase" class="flex-grow mt-1 px-3 py-2 border rounded-md"><option value="">Selecione um produto...</option>${productOptions}</select><button type="button" id="btn-add-purchase-item" class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"><i data-lucide="plus"></i></button></div></div>
-                    <div class="border rounded-lg p-4 flex justify-between items-center">
-                        <p class="text-lg font-bold">CUSTO TOTAL</p><p id="purchase-total" class="text-3xl font-bold text-red-600">R$ 0,00</p>
-                    </div>
-                    <div id="purchase-error" class="text-red-500 text-sm text-center mt-4 hidden"></div>
-                    <div class="mt-6 flex justify-end space-x-3"><button type="button" id="btn-cancel-modal" class="px-5 py-3 bg-slate-200 rounded-lg">Cancelar</button><button type="submit" class="px-5 py-3 bg-pink-400 text-white rounded-lg">${order ? 'Salvar Alterações' : 'Criar Pedido'}</button></div>
-                </form>
-            `;
-        }
-
-        function getExpenseForm(expense = null) {
-            const categoryOptions = state.expenseCategories.map(c => `<option value="${c.id}" ${expense?.categoryId === c.id ? 'selected' : ''}>${c.name}</option>`).join('');
-            const launchDateValue = expense ? expense.date.toDate().toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10);
-            const dueDateValue = expense ? expense.dueDate.toDate().toISOString().slice(0, 10) : '';
-
-            return `
-                <form id="form-expense">
-                    <input type="hidden" name="id" value="${expense?.id || ''}">
-                    <h3 class="text-2xl font-bold mb-4">${expense ? 'Editar' : 'Nova'} Despesa</h3>
-                    <div class="space-y-4">
-                        <div><label class="block text-sm font-medium">Descrição*</label><input type="text" name="description" required value="${expense?.description || ''}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                        <div><label class="block text-sm font-medium">Valor (R$)*</label><input type="number" name="amount" required min="0.01" step="0.01" value="${expense?.amount || ''}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                        <div><label class="block text-sm font-medium">Categoria*</label><select name="categoryId" required class="w-full mt-1 px-3 py-2 border rounded-md"><option value="">Selecione...</option>${categoryOptions}</select></div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-medium">Data Lançamento*</label><input type="date" name="date" required value="${launchDateValue}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                            <div><label class="block text-sm font-medium">Data Vencimento*</label><input type="date" name="dueDate" required value="${dueDateValue}" class="w-full mt-1 px-3 py-2 border rounded-md"></div>
-                        </div>
-                    </div>
-                    <div class="mt-6 flex justify-end space-x-3"><button type="button" id="btn-cancel-modal" class="px-5 py-3 bg-slate-200 rounded-lg">Cancelar</button><button type="submit" class="px-5 py-3 bg-pink-400 text-white rounded-lg">${expense ? 'Salvar Alterações' : 'Salvar Despesa'}</button></div>
-                </form>
-            `;
-        }
-        
-        function getManageCategoriesForm() {
-            const categoryList = state.expenseCategories.map(c => `<li class="flex justify-between items-center p-2 border-b">${c.name}<button class="btn-delete-category text-red-500 p-1" data-id="${c.id}"><i data-lucide="trash-2" class="w-4 h-4"></i></button></li>`).join('');
-            return `
-                <h3 class="text-2xl font-bold mb-4">Gerenciar Categorias</h3>
-                <div class="mb-4 max-h-60 overflow-y-auto"><ul>${categoryList || '<li class="text-center text-slate-500 p-4">Nenhuma categoria.</li>'}</ul></div>
-                <form id="form-category" class="mt-6 border-t pt-4">
-                    <h4 class="font-semibold mb-2">Nova Categoria</h4>
-                    <div class="flex gap-2"><input type="text" name="name" required class="flex-grow px-3 py-2 border rounded-md"><button type="submit" class="px-4 py-2 bg-pink-400 text-white rounded-lg">Adicionar</button></div>
-                </form>
-                <div class="mt-6 flex justify-end"><button type="button" id="btn-cancel-modal" class="px-5 py-3 bg-slate-200 rounded-lg">Fechar</button></div>
-            `;
-        }
-
-        // --- LÓGICA DE NEGÓCIO E FIRESTORE ---
-
-        async function handleClientForm(e) {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const id = formData.get('id');
-            const clientData = { name: formData.get('name'), cpf: formData.get('cpf'), phone: formData.get('phone'), address: formData.get('address') };
-            if (id) {
-                await updateDoc(doc(db, dbPaths.clients, id), clientData);
-            } else {
-                clientData.latePaymentsCount = 0;
-                await addDoc(collection(db, dbPaths.clients), clientData);
+        clientModal.addEventListener('click', (e) => {
+            if (e.target === clientModal) {
+                 clientModal.classList.add('hidden');
+                 clientForm.reset();
             }
-            closeModal();
-        }
+        });
 
-        async function handleDeleteClient(id) {
-            if (confirm('Tem certeza que deseja excluir este cliente? Todas as vendas e contas a receber dele serão mantidas, mas o nome não será exibido.')) {
-                await deleteDoc(doc(db, dbPaths.clients, id));
-            }
-        }
-        
-        async function handleProductForm(e) {
+        clientForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const formData = new FormData(e.target);
-            const id = formData.get('id');
-            const productData = {
-                name: formData.get('name'),
-                brand: formData.get('brand'),
-                cost: parseFloat(formData.get('cost')),
-                price: parseFloat(formData.get('price')),
-                quantity: parseInt(formData.get('quantity')),
-                validityDate: formData.get('validityDate') ? new Date(formData.get('validityDate') + 'T12:00:00') : null
+            const clientData = {
+                empresa: document.getElementById('empresa').value.trim(),
+                endereco: document.getElementById('endereco').value.trim(),
+                telefone: document.getElementById('telefone').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                vendedor: document.getElementById('vendedor').value.trim(),
+                categoria: document.getElementById('categoria').value,
             };
-            if (id) {
-                await updateDoc(doc(db, dbPaths.products, id), productData);
-            } else {
-                await addDoc(collection(db, dbPaths.products), { ...productData, createdAt: new Date() });
-            }
-            closeModal();
-        }
-
-        async function handleDeleteProduct(id) {
-            if (confirm('Tem certeza que deseja excluir este produto? A ação não pode ser desfeita.')) {
-                await deleteDoc(doc(db, dbPaths.products, id));
-            }
-        }
-        
-        async function handleStockUpdate(productId, action) {
-            const amountStr = prompt(`Quanto você quer ${action === 'add' ? 'adicionar' : 'remover'}?`);
-            if (!amountStr) return;
-            const amount = parseInt(amountStr);
-            if (isNaN(amount) || amount <= 0) return;
-            const product = state.products.find(p => p.id === productId);
-            if (!product) return;
-            const newQuantity = action === 'add' ? product.quantity + amount : product.quantity - amount;
-            if (newQuantity < 0) { alert("Estoque não pode ser negativo."); return; }
-            await updateDoc(doc(db, dbPaths.products, productId), { quantity: newQuantity });
-        }
-        
-        async function handleUserForm(e) {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const id = formData.get('id');
-            const userData = { username: formData.get('username'), password: formData.get('password'), role: formData.get('role') || 'seller' };
-            if (id) await updateDoc(doc(db, dbPaths.users, id), { password: userData.password });
-            else await addDoc(collection(db, dbPaths.users), userData);
-            closeModal();
-        }
-
-        // ALTERADO - ADICIONADO PROTEÇÃO PARA CONTAS ADMIN
-        async function handleDeleteUser(id) {
-            const userToDelete = state.users.find(u => u.id === id);
-            if (userToDelete && userToDelete.role === 'admin') {
-                alert('Não é possível excluir um usuário administrador.');
-                return;
-            }
-            if (confirm('Tem certeza que deseja excluir este usuário?')) {
-                await deleteDoc(doc(db, dbPaths.users, id));
-            }
-        }
-
-        function checkDiscount(discountPercent) {
-            if (discountPercent > 10) {
-                const pass = prompt('Desconto > 10%. Insira a senha de administrador:');
-                return pass === ADMIN_PASSWORD_STATIC;
-            }
-            return true;
-        }
-        
-        async function handleTransaction(e, type) {
-            e.preventDefault();
-            const errorEl = document.getElementById('transaction-error');
-            errorEl.classList.add('hidden');
-            const formData = new FormData(e.target);
-            const id = formData.get('id');
-            const clientId = formData.get('clientId');
-            const paymentMethod = formData.get('paymentMethod');
-            const discountPercent = parseFloat(document.getElementById('discount-percent').value) || 0;
-            const discountValue = parseFloat(document.getElementById('discount-value').value) || 0;
-            const installmentsCount = parseInt(formData.get('installmentsCount') || 1);
-            const isSale = type === 'sale';
-
-            if (isSale && paymentMethod === 'A Prazo' && clientId === 'consumidor') { errorEl.textContent = 'Vendas "A Prazo" exigem um cliente cadastrado.'; errorEl.classList.remove('hidden'); return; }
-            
-            if (isSale && paymentMethod === 'A Prazo' && !id) {
-                const today = new Date();
-                today.setHours(0,0,0,0);
-                const hasOverdue = state.receivables.some(r => r.clientId === clientId && r.status === 'Pendente' && r.dueDate.toDate() < today);
-                if (hasOverdue) {
-                    errorEl.textContent = 'Cliente com pendências vencidas. Nova compra a prazo não permitida.';
-                    errorEl.classList.remove('hidden');
-                    return;
-                }
-            }
-            
-            const items = Array.from(document.querySelectorAll('.transaction-item')).map(el => {
-                const product = state.products.find(p => p.id === el.dataset.productId);
-                return { productId: el.dataset.productId, productName: el.dataset.productName, quantity: parseInt(el.querySelector('input[type="number"]').value), price: parseFloat(el.dataset.price), cost: product ? (product.cost || 0) : 0 }
-            });
-
-            if (items.length === 0) { errorEl.textContent = 'Adicione pelo menos um item.'; errorEl.classList.remove('hidden'); return; }
-            
-            const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const finalDiscountPercent = discountValue > 0 ? (discountValue / subtotal) * 100 : discountPercent;
-            
-            if (!checkDiscount(finalDiscountPercent)) { errorEl.textContent = 'Senha incorreta. Desconto não autorizado.'; errorEl.classList.remove('hidden'); return; }
-
-            const total = subtotal - (subtotal * (discountPercent / 100)) - discountValue;
-            const transactionData = { clientId, items, total, subtotal, discountPercent, discountValue, date: new Date(), sellerId: state.currentUser.id, sellerName: state.currentUser.username };
-
-            if (isSale) {
-                transactionData.paymentMethod = paymentMethod;
-                if (paymentMethod === 'A Prazo') {
-                    transactionData.installmentsCount = installmentsCount;
-                }
-            }
-
-            const dbPath = type === 'sale' ? dbPaths.sales : dbPaths.quotes;
-
             try {
-                const batch = writeBatch(db);
-                let saleId = id;
-                let saleDocRef;
-
-                if(id) { 
-                    saleDocRef = doc(db, dbPath, id);
-                    batch.update(saleDocRef, transactionData);
-                } else { 
-                    saleDocRef = doc(collection(db, dbPath));
-                    saleId = saleDocRef.id;
-                    batch.set(saleDocRef, transactionData);
-                }
-                
-                if (isSale && !id) {
-                    for (const item of items) {
-                        const productRef = doc(db, dbPaths.products, item.productId);
-                        const product = state.products.find(p => p.id === item.productId);
-                        batch.update(productRef, { quantity: product.quantity - item.quantity });
-                    }
-                    
-                    if (paymentMethod === 'A Prazo') {
-                        const installmentAmount = total / installmentsCount;
-                        const clientName = state.clients.find(c => c.id === clientId)?.name || '';
-                        for (let i = 1; i <= installmentsCount; i++) {
-                            const dueDate = new Date();
-                            dueDate.setDate(dueDate.getDate() + 30 * i); 
-                            dueDate.setHours(12,0,0,0);
-                            const receivableData = {
-                                clientId, clientName, saleId,
-                                amount: installmentAmount,
-                                installmentNumber: i,
-                                totalInstallments: installmentsCount,
-                                dueDate: dueDate,
-                                status: 'Pendente',
-                                paymentDate: null
-                            };
-                            batch.set(doc(collection(db, dbPaths.receivables)), receivableData);
-                        }
-                    }
-                    
-                    if (state.quoteToConvert) {
-                        batch.delete(doc(db, dbPaths.quotes, state.quoteToConvert.id));
-                        state.quoteToConvert = null;
-                    }
-                }
-                
-                await batch.commit();
-                closeModal();
-            } catch (err) {
-                errorEl.textContent = `Erro ao salvar ${type}.`;
-                errorEl.classList.remove('hidden');
-                console.error(err);
-            }
-        }
-        
-        async function handleDeleteTransaction(id, type) {
-            if (confirm(`Tem certeza que deseja excluir? Se for uma venda a prazo, as parcelas NÃO serão removidas.`)) {
-                const dbPath = type === 'sale' ? dbPaths.sales : dbPaths.quotes;
-                await deleteDoc(doc(db, dbPath, id));
-            }
-        }
-
-        async function handleManualBackup() {
-            try {
-                const backupData = {
-                    clients: state.clients, products: state.products, users: state.users,
-                    sales: state.sales.map(s => ({...s, date: s.date.toDate()})),
-                    quotes: state.quotes.map(q => ({...q, date: q.date.toDate()})),
-                    purchaseOrders: state.purchaseOrders.map(p => ({...p, date: p.date.toDate()})),
-                    expenses: state.expenses.map(e => ({...e, date: e.date.toDate()})),
-                    expenseCategories: state.expenseCategories,
-                    receivables: state.receivables.map(r => ({...r, dueDate: r.dueDate.toDate()})),
-                    exportedAt: new Date().toISOString()
-                };
-                const jsonString = JSON.stringify(backupData, null, 2);
-                const blob = new Blob([jsonString], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                const today = new Date().toISOString().slice(0, 10);
-                a.href = url;
-                a.download = `backup-maria-beleza-${today}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            } catch (error) {
-                console.error("Erro ao gerar backup:", error);
-                alert("Ocorreu um erro ao gerar o backup.");
-            }
-        }
-
-        async function handlePurchaseOrderForm(e) {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const id = formData.get('id');
-            const supplier = formData.get('supplier');
-            
-            const items = Array.from(document.querySelectorAll('.purchase-item')).map(el => {
-                const product = state.products.find(p => p.id === el.dataset.productId);
-                return { 
-                    productId: product.id, productName: product.name, 
-                    quantity: parseInt(el.querySelector('input[type="number"]').value), 
-                    cost: parseFloat(product.cost)
-                }
-            });
-
-            if(items.length === 0) {
-                document.getElementById('purchase-error').textContent = 'Adicione pelo menos um item ao pedido.';
-                document.getElementById('purchase-error').classList.remove('hidden');
-                return;
-            }
-            const totalCost = items.reduce((sum, item) => sum + (item.cost * item.quantity), 0);
-
-            const purchaseOrderData = {
-                supplier, items, totalCost, date: new Date(),
-                status: id ? state.purchaseOrders.find(o => o.id === id).status : 'Pendente'
-            };
-            
-            try {
-                const batch = writeBatch(db);
-                const expenseDesc = `Compra de mercadorias - Fornecedor: ${supplier}`;
-                let category = state.expenseCategories.find(c => c.name.toLowerCase() === 'compra de mercadorias');
-
-                if (!category) {
-                    const catRef = doc(collection(db, dbPaths.expenseCategories));
-                    const newCategoryData = { name: 'Compra de Mercadorias' };
-                    batch.set(catRef, newCategoryData);
-                    category = { id: catRef.id, ...newCategoryData };
-                }
-
-                if (id) {
-                    const orderRef = doc(db, dbPaths.purchaseOrders, id);
-                    batch.update(orderRef, purchaseOrderData);
-
-                    const expenseQuery = query(collection(db, dbPaths.expenses), where("purchaseOrderId", "==", id));
-                    const expenseSnapshot = await getDocs(expenseQuery);
-                    if (!expenseSnapshot.empty) {
-                        const expenseDoc = expenseSnapshot.docs[0];
-                        batch.update(expenseDoc.ref, { amount: totalCost, description: expenseDesc });
-                    }
+                if (editingClientId) {
+                    const clientDocRef = doc(db, 'clientes', editingClientId);
+                    await updateDoc(clientDocRef, clientData);
                 } else {
-                    const purchaseOrderRef = doc(collection(db, dbPaths.purchaseOrders));
-                    batch.set(purchaseOrderRef, purchaseOrderData);
-                    const today = new Date();
-                    const expenseData = {
-                        description: expenseDesc, amount: totalCost, categoryId: category.id,
-                        date: today, purchaseOrderId: purchaseOrderRef.id, 
-                        status: 'Pendente', dueDate: today 
-                    };
-                    const expenseRef = doc(collection(db, dbPaths.expenses));
-                    batch.set(expenseRef, expenseData);
+                    await addDoc(clientsCollectionRef, { ...clientData, status: 'Não contatado', criadoEm: new Date(), criadoPor: currentUserId });
+                }
+                clientModal.classList.add('hidden');
+                clientForm.reset();
+                editingClientId = null;
+            } catch (error) {
+                console.error("Erro ao salvar cliente:", error);
+            }
+        });
+
+        async function updateClientStatus(id, newStatus) {
+            const clientDocRef = doc(db, 'clientes', id);
+            await updateDoc(clientDocRef, { status: newStatus });
+        }
+
+        async function deleteClient(id) {
+            const clientDocRef = doc(db, 'clientes', id);
+            await deleteDoc(clientDocRef);
+        }
+        
+        clientList.addEventListener('click', (e) => {
+            const editButton = e.target.closest('.edit-btn');
+            const deleteButton = e.target.closest('.delete-btn');
+            
+            if (editButton) {
+                openModalForEdit(editButton.dataset.id);
+            }
+            
+            if (deleteButton) {
+                if (confirm('Tem certeza que deseja excluir este cliente?')) {
+                     deleteClient(deleteButton.dataset.id);
+                }
+            }
+        });
+
+        // --- Criação do Card do Cliente (UI) ---
+        function createClientCard(id, data) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-lg shadow-md p-5 flex flex-col justify-between transition-transform transform hover:-translate-y-1';
+            const categoryColors = {
+                'Funilaria': 'bg-purple-100 text-purple-800', 
+                'Estetica Automotiva': 'bg-teal-100 text-teal-800', 
+                'Marcenaria': 'bg-yellow-100 text-yellow-800', 
+                'Industria': 'bg-red-100 text-red-800', 
+                'Fabrica': 'bg-indigo-100 text-indigo-800',
+                'Usina': 'bg-gray-200 text-gray-800',
+                'Car Detailing': 'bg-blue-100 text-blue-800'
+            };
+            const statusColors = { 'Não contatado': 'bg-gray-200 text-gray-800', 'Contatado': 'bg-blue-200 text-blue-800', 'Em negociação': 'bg-yellow-200 text-yellow-800', 'Cliente': 'bg-green-200 text-green-800' };
+            const statusOptions = ['Não contatado', 'Contatado', 'Em negociação', 'Cliente'];
+            card.innerHTML = `
+                <div>
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-lg font-bold text-gray-900 pr-2">${data.empresa}</h3>
+                        <span class="text-xs font-semibold px-2 py-1 rounded-full ${categoryColors[data.categoria] || 'bg-gray-100'}">${data.categoria}</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-1"><span class="font-semibold">Endereço:</span> ${data.endereco || 'Não informado'}</p>
+                    ${data.telefone ? `<p class="text-sm text-gray-600 mb-1"><span class="font-semibold">Telefone:</span> ${data.telefone}</p>` : ''}
+                    ${data.email ? `<p class="text-sm text-gray-600 mb-1"><span class="font-semibold">Email:</span> ${data.email}</p>` : ''}
+                    <p class="text-sm text-gray-600 mb-4"><span class="font-semibold">Vendedor:</span> ${data.vendedor || 'Não atribuído'}</p>
+                </div>
+                <div class="mt-auto pt-4 border-t border-gray-200">
+                    <div class="flex justify-between items-center">
+                         <select class="status-select w-full text-sm font-semibold p-2 rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 ${statusColors[data.status]}">
+                             ${statusOptions.map(opt => `<option value="${opt}" ${opt === data.status ? 'selected' : ''}>${opt}</option>`).join('')}
+                         </select>
+                         <div class="flex items-center ml-3">
+                             <button class="edit-btn text-gray-400 hover:text-blue-600 transition duration-300 mr-2" data-id="${id}">
+                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z" />
+                                 </svg>
+                             </button>
+                             <button class="delete-btn text-gray-400 hover:text-red-600 transition duration-300" data-id="${id}">
+                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                 </svg>
+                             </button>
+                         </div>
+                    </div>
+                </div>
+            `;
+            card.querySelector('.status-select').addEventListener('change', (e) => updateClientStatus(id, e.target.value));
+            return card;
+        }
+
+        // --- LÓGICA DE IMPORTAÇÃO ---
+        importBtn.addEventListener('click', importProspects);
+
+        const prospectsToImport = [
+            { empresa: 'Fernandes Funilaria E Pintura', endereco: 'Rua Dr. Gurgel, 123, Presidente Prudente, SP', telefone: '(18) 99999-1234', categoria: 'Funilaria' },
+            { empresa: 'Laav Estética Automotiva', endereco: 'Av. Brasil, 456, Presidente Prudente, SP', telefone: '(18) 98888-5678', email: 'contato@laavprudente.com.br', categoria: 'Estetica Automotiva' },
+            { empresa: 'Marcenaria Arte & Ofício', endereco: 'Rua das Acácias, 789, Presidente Prudente, SP', telefone: '(18) 97777-4321', categoria: 'Marcenaria' },
+            { empresa: 'Prudemplast Química Industrial', endereco: 'Distrito Industrial, Presidente Prudente, SP', telefone: '(18) 3222-3344', email: 'vendas@prudemplast.com.br', categoria: 'Industria' },
+            { empresa: 'Detailing Masters', endereco: 'Av. da Saudade, 101, Presidente Prudente, SP', telefone: '(18) 96666-9876', categoria: 'Car Detailing' },
+            { empresa: 'Móveis Planejados Prudente', endereco: 'Atendimento em toda a região', telefone: '(18) 95555-1234', categoria: 'Marcenaria' },
+            { empresa: 'Usina Alto Alegre', endereco: 'Zona Rural, Presidente Prudente, SP', telefone: '(18) 3902-9900', categoria: 'Usina' },
+            { empresa: 'Fábrica de Sonhos Estofados', endereco: 'Rua da Produção, 202, Presidente Prudente, SP', telefone: '(18) 94444-5678', categoria: 'Fabrica' },
+            { empresa: 'Auto Funilaria e Pintura do Alemão', endereco: 'Rua XV de Novembro, 303, Dracena, SP', telefone: '(18) 93333-8765', categoria: 'Funilaria' },
+            { empresa: 'Garagem Estética Automotiva', endereco: 'Av. Presidente Vargas, 404, Dracena, SP', telefone: '(18) 92222-1234', categoria: 'Estetica Automotiva' },
+            { empresa: 'Marcenaria São José', endereco: 'Rua das Oliveiras, 505, Dracena, SP', telefone: '(18) 91111-5678', categoria: 'Marcenaria' },
+            { empresa: 'Indústria de Bebidas Funada', endereco: 'Rodovia Comandante João Ribeiro de Barros, Dracena, SP', telefone: '(18) 3821-1345', categoria: 'Industria' },
+            { empresa: 'Funilaria e Pintura do Tuta', endereco: 'Rua Tiradentes, 606, Presidente Venceslau, SP', telefone: '(18) 99988-7766', categoria: 'Funilaria' },
+            { empresa: 'Stock Car - Estética Automotiva', endereco: 'Av. Dom Pedro II, 707, Presidente Venceslau, SP', telefone: '(18) 98877-6655', categoria: 'Estetica Automotiva' },
+            { empresa: 'Móveis Planejados Venceslau', endereco: 'Centro, Presidente Venceslau, SP', telefone: '(18) 97766-5544', categoria: 'Marcenaria' },
+            { empresa: 'Fábrica de Telhas de Concreto', endereco: 'Distrito Industrial, Presidente Venceslau, SP', telefone: '(18) 3271-1122', categoria: 'Fabrica' },
+            { empresa: 'Garrido Funilaria', endereco: 'Rua das Flores, 808, Adamantina, SP', telefone: '(18) 96655-4433', categoria: 'Funilaria' },
+            { empresa: 'The Best Estética Automotiva', endereco: 'Alameda Fernão Dias, 909, Adamantina, SP', telefone: '(18) 95544-3322', categoria: 'Estetica Automotiva' },
+            { empresa: 'Marcenaria Irmãos Unidos', endereco: 'Av. Rio Branco, 1010, Adamantina, SP', telefone: '(18) 94433-2211', categoria: 'Marcenaria' },
+            { empresa: 'Fábrica de Blocos Adamantina', endereco: 'Parque Industrial, Adamantina, SP', telefone: '(18) 3521-2233', categoria: 'Fabrica' },
+            { empresa: 'Funilaria E Pintura Ideal', endereco: 'Rua Projetada A, 111, Rancharia, SP', telefone: '(18) 93322-1100', categoria: 'Funilaria' },
+            { empresa: 'Up Estética Automotiva', endereco: 'Av. Brasil, 1212, Rancharia, SP', telefone: '(18) 92211-0099', categoria: 'Estetica Automotiva' },
+            { empresa: 'Rancharia Móveis', endereco: 'Centro, Rancharia, SP', telefone: '(18) 91100-9988', categoria: 'Marcenaria' },
+            { empresa: 'Fábrica de Lajes Rancharia', endereco: 'Distrito Industrial, Rancharia, SP', telefone: '(18) 3265-1122', categoria: 'Fabrica' },
+            { empresa: 'Funilaria e Pintura Central', endereco: 'Av. da Orla, 1313, Presidente Epitácio, SP', telefone: '(18) 99988-7711', categoria: 'Funilaria' },
+            { empresa: 'Steticar', endereco: 'Rua da Praia, 1414, Presidente Epitácio, SP', telefone: '(18) 98877-1122', categoria: 'Estetica Automotiva' },
+            { empresa: 'Marcenaria Epitácio', endereco: 'Bairro Portão, Presidente Epitácio, SP', telefone: '(18) 97766-2233', categoria: 'Marcenaria' },
+            { empresa: 'Fábrica de Ração', endereco: 'Zona Rural, Presidente Epitácio, SP', telefone: '(18) 3281-3344', categoria: 'Fabrica' },
+            { empresa: 'Auto Elétrico e Funilaria do Alemão', endereco: 'Av. Brasil, 1515, Teodoro Sampaio, SP', telefone: '(18) 96655-3344', categoria: 'Funilaria' },
+            { empresa: 'Perfeita Estetica Automotiva', endereco: 'Rua Central, 1616, Teodoro Sampaio, SP', telefone: '(18) 95544-4455', categoria: 'Estetica Automotiva' },
+            { empresa: 'Auto Peças e Funilaria Modelo', endereco: 'Av. Coronel Marcondes, 2020, Pirapozinho, SP', telefone: '(18) 94433-5566', categoria: 'Funilaria' },
+            { empresa: 'Polimento e Cia', endereco: 'Rua Barão do Rio Branco, 2121, Pirapozinho, SP', telefone: '(18) 93322-6677', categoria: 'Estetica Automotiva' },
+            { empresa: 'Marcenaria Pirapozinho', endereco: 'Jardim das Flores, Pirapozinho, SP', telefone: '(18) 92211-7788', categoria: 'Marcenaria' },
+            { empresa: 'Fábrica de Pré-Moldados', endereco: 'Distrito Industrial, Pirapozinho, SP', telefone: '(18) 3269-8899', categoria: 'Fabrica' },
+            { empresa: 'Funilaria Santo Anastácio', endereco: 'Rua Osvaldo Cruz, 2222, Santo Anastácio, SP', telefone: '(18) 91100-8899', categoria: 'Funilaria' },
+            { empresa: 'Top Car Estética', endereco: 'Av. Nove de Julho, 2323, Santo Anastácio, SP', telefone: '(18) 99988-9900', categoria: 'Estetica Automotiva' },
+            { empresa: 'Indústria de Calçados', endereco: 'Parque Industrial, Santo Anastácio, SP', telefone: '(18) 3928-1122', categoria: 'Industria' },
+            { empresa: 'F1 Funilaria e Pintura', endereco: 'Rua Ribeiro de Barros, 2424, Álvares Machado, SP', telefone: '(18) 98877-0011', categoria: 'Funilaria' },
+            { empresa: 'Machado Car Detail', endereco: 'Centro, Álvares Machado, SP', telefone: '(18) 97766-1122', categoria: 'Car Detailing' },
+            { empresa: 'Marcenaria Machado', endereco: 'Vila Industrial, Álvares Machado, SP', telefone: '(18) 96655-2233', categoria: 'Marcenaria' },
+            { empresa: 'Fábrica de Embalagens', endereco: 'Rodovia, Álvares Machado, SP', telefone: '(18) 3273-2233', categoria: 'Fabrica' },
+            { empresa: 'Oficina do Zé Funilaria', endereco: 'Rua Principal, 2525, Regente Feijó, SP', telefone: '(18) 95544-3344', categoria: 'Funilaria' },
+            { empresa: 'Studio Car Regente', endereco: 'Av. dos Expedicionários, 2626, Regente Feijó, SP', telefone: '(18) 94433-4455', categoria: 'Estetica Automotiva' },
+            { empresa: 'Indústria Têxtil', endereco: 'Parque Industrial, Regente Feijó, SP', telefone: '(18) 3279-5566', categoria: 'Industria' },
+            { empresa: 'Usina Regente', endereco: 'Zona Rural, Regente Feijó, SP', telefone: '(18) 3900-1122', categoria: 'Usina' },
+        ];
+
+        async function importProspects() {
+            let addedCount = 0;
+            let skippedCount = 0;
+            const existingCompanyNames = allClientsData.map(client => client.empresa.toLowerCase());
+
+            for (const prospect of prospectsToImport) {
+                if (existingCompanyNames.includes(prospect.empresa.toLowerCase())) {
+                    skippedCount++;
+                    continue;
                 }
                 
-                await batch.commit();
-                closeModal();
-            } catch(err) {
-                console.error("Erro ao salvar pedido: ", err);
-                document.getElementById('purchase-error').textContent = 'Erro ao salvar pedido.';
-                document.getElementById('purchase-error').classList.remove('hidden');
-            }
-        }
-        
-        async function handleDeletePurchaseOrder(orderId) {
-            if (!confirm('Tem certeza que deseja excluir este pedido de compra? A despesa associada também será excluída.')) return;
-            
-            try {
-                const batch = writeBatch(db);
-                const orderRef = doc(db, dbPaths.purchaseOrders, orderId);
-                batch.delete(orderRef);
-
-                const expenseQuery = query(collection(db, dbPaths.expenses), where("purchaseOrderId", "==", orderId));
-                const expenseSnapshot = await getDocs(expenseQuery);
-                if (!expenseSnapshot.empty) {
-                    const expenseDoc = expenseSnapshot.docs[0];
-                    batch.delete(expenseDoc.ref);
-                }
-                await batch.commit();
-            } catch(err) {
-                console.error("Erro ao excluir pedido:", err);
-                alert("Ocorreu um erro ao excluir o pedido.");
-            }
-        }
-
-        async function handleReceivePurchaseOrder(orderId) {
-             if (!confirm('Confirmar o recebimento deste pedido? O estoque será atualizado.')) return;
-             const order = state.purchaseOrders.find(p => p.id === orderId);
-             if(!order) return;
-
-             const batch = writeBatch(db);
-             const orderRef = doc(db, dbPaths.purchaseOrders, orderId);
-             batch.update(orderRef, { status: 'Recebido' });
-
-             for(const item of order.items) {
-                 const productRef = doc(db, dbPaths.products, item.productId);
-                 const product = state.products.find(p => p.id === item.productId);
-                 if(product) {
-                     const newQuantity = (product.quantity || 0) + item.quantity;
-                     batch.update(productRef, { quantity: newQuantity });
-                 }
-             }
-             await batch.commit();
-        }
-
-        async function handleExpenseForm(e) {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const id = formData.get('id');
-            const expenseData = {
-                description: formData.get('description'),
-                amount: parseFloat(formData.get('amount')),
-                categoryId: formData.get('categoryId'),
-                date: new Date(formData.get('date') + 'T12:00:00'),
-                dueDate: new Date(formData.get('dueDate') + 'T12:00:00')
-            };
-
-            if (id) {
-                await updateDoc(doc(db, dbPaths.expenses, id), expenseData);
-            } else {
-                expenseData.status = 'Pendente';
-                await addDoc(collection(db, dbPaths.expenses), expenseData);
-            }
-            closeModal();
-        }
-        
-        async function handleDeleteExpense(expenseId) {
-            if (confirm("Tem certeza que deseja excluir esta despesa?")) {
-                await deleteDoc(doc(db, dbPaths.expenses, expenseId));
-            }
-        }
-        
-        async function handleSettleExpense(expenseId) {
-            if (confirm("Confirmar o pagamento (baixa) desta conta?")) {
-                await updateDoc(doc(db, dbPaths.expenses, expenseId), {
-                    status: 'Pago',
-                    paymentDate: new Date()
-                });
-            }
-        }
-        
-        async function handleSettleReceivable(receivableId, clientId) {
-            if (confirm("Confirmar o recebimento desta parcela?")) {
-                const receivable = state.receivables.find(r => r.id === receivableId);
-                if (!receivable) return;
-
-                const today = new Date();
-                today.setHours(0,0,0,0);
-                const isLate = receivable.dueDate.toDate() < today;
-
-                await updateDoc(doc(db, dbPaths.receivables, receivableId), {
-                    status: 'Pago',
-                    paymentDate: new Date()
-                });
-
-                if (isLate && clientId) {
-                    const clientRef = doc(db, dbPaths.clients, clientId);
-                    try {
-                         const clientDoc = await getDoc(clientRef);
-                        if (clientDoc.exists()) {
-                            const currentLateCount = clientDoc.data().latePaymentsCount || 0;
-                            await updateDoc(clientRef, { latePaymentsCount: currentLateCount + 1 });
-                        }
-                    } catch (error) {
-                        console.error("Erro ao atualizar contador de atrasos do cliente:", error)
-                    }
+                try {
+                    await addDoc(clientsCollectionRef, {
+                        ...prospect,
+                        status: 'Não contatado',
+                        criadoEm: new Date(),
+                        criadoPor: currentUserId
+                    });
+                    addedCount++;
+                } catch (error) {
+                    console.error("Erro ao importar cliente:", prospect.empresa, error);
                 }
             }
-        }
-        
-        async function handleEditReceivable(e) {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const id = formData.get('id');
-            if (!id) return;
-
-            const updatedData = {
-                amount: parseFloat(formData.get('amount')),
-                dueDate: new Date(formData.get('dueDate') + 'T12:00:00'),
-            };
-
-            await updateDoc(doc(db, dbPaths.receivables, id), updatedData);
-            closeModal();
-        }
-        
-        async function handleDeleteReceivable(receivableId) {
-            if (confirm("Tem certeza que deseja PERDOAR/EXCLUIR esta parcela? A ação não pode ser desfeita.")) {
-                await deleteDoc(doc(db, dbPaths.receivables, receivableId));
-            }
-        }
-
-        async function handleCategoryForm(e) {
-            e.preventDefault();
-            const name = e.target.name.value;
-            if (name && name.trim() !== '') {
-                 await addDoc(collection(db, dbPaths.expenseCategories), { name: name.trim() });
-                 showManageCategoriesModal();
-            }
-        }
-
-        async function handleDeleteCategory(id) {
-            if (confirm('Tem certeza? Se houver despesas nesta categoria, elas ficarão como "Sem Categoria".')) {
-                await deleteDoc(doc(db, dbPaths.expenseCategories, id));
-                showManageCategoriesModal();
-            }
-        }
-        
-        function checkUpcomingBills() {
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const upcomingBills = state.expenses.filter(exp => {
-                if (exp.status !== 'Pendente' || !exp.dueDate) return false;
-                const dueDate = exp.dueDate.toDate();
-                dueDate.setHours(0,0,0,0);
-                const timeDiff = dueDate.getTime() - today.getTime();
-                const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                return dayDiff >= 0 && dayDiff <= 2;
-            });
-
-            if (upcomingBills.length > 0) {
-                let message = `LEMBRETE DE CONTAS A PAGAR:\n\n`;
-                upcomingBills.forEach(bill => {
-                    message += `- ${bill.description} (R$ ${bill.amount.toFixed(2)}) vence em ${bill.dueDate.toDate().toLocaleDateString('pt-BR')}.\n`;
-                });
-                alert(message);
-            }
-        }
-
-        // --- EVENT LISTENERS DINÂMICOS ---
-        
-        function addEventListeners() {
-            document.getElementById('btn-logout')?.addEventListener('click', handleLogout);
-            document.getElementById('btn-new-client')?.addEventListener('click', showNewClientModal);
-            document.getElementById('btn-new-product')?.addEventListener('click', showNewProductModal);
-            document.getElementById('btn-new-sale')?.addEventListener('click', () => { state.quoteToConvert = null; openModal(getTransactionForm('sale'), 'max-w-2xl'); });
-            document.getElementById('btn-new-quote')?.addEventListener('click', () => openModal(getTransactionForm('quote'), 'max-w-2xl'));
-            document.getElementById('btn-manual-backup')?.addEventListener('click', handleManualBackup);
-            document.getElementById('filter-date-vendas')?.addEventListener('change', render);
-            document.getElementById('filter-date-orcamentos')?.addEventListener('change', render);
-            document.getElementById('btn-new-purchase-order')?.addEventListener('click', () => openModal(getPurchaseOrderForm(), 'max-w-2xl'));
-            document.getElementById('btn-new-expense')?.addEventListener('click', () => openModal(getExpenseForm(), 'max-w-lg'));
-            document.getElementById('btn-manage-categories')?.addEventListener('click', () => openModal(getManageCategoriesForm(), 'max-w-md'));
-            document.getElementById('btn-back-to-clients')?.addEventListener('click', () => navigateTo('clientes'));
-
-            document.querySelectorAll('.btn-stock-update').forEach(btn => btn.addEventListener('click', () => handleStockUpdate(btn.dataset.productId, btn.dataset.action)));
-            document.querySelectorAll('.btn-view-profile').forEach(btn => btn.addEventListener('click', () => navigateTo('clientProfile', btn.dataset.clientId)));
-            document.querySelectorAll('.btn-settle-receivable').forEach(btn => btn.addEventListener('click', () => handleSettleReceivable(btn.dataset.receivableId, btn.dataset.clientId)));
             
-            document.querySelectorAll('.btn-toggle-details').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const clientId = btn.dataset.clientId;
-                    const detailsRow = document.querySelector(`.details-row[data-details-for="${clientId}"]`);
-                    detailsRow?.classList.toggle('hidden');
-                    const icon = btn.querySelector('i');
-                    icon.setAttribute('data-lucide', detailsRow?.classList.contains('hidden') ? 'chevron-down' : 'chevron-up');
-                    lucide.createIcons();
-                });
-            });
-
-            document.querySelectorAll('.btn-edit-client').forEach(btn => btn.addEventListener('click', () => showEditClientModal(state.clients.find(c => c.id === btn.dataset.clientId))));
-            document.querySelectorAll('.btn-delete-client').forEach(btn => btn.addEventListener('click', () => handleDeleteClient(btn.dataset.clientId)));
-            document.querySelectorAll('.btn-edit-product').forEach(btn => btn.addEventListener('click', () => showEditProductModal(state.products.find(p => p.id === btn.dataset.productId))));
-            document.querySelectorAll('.btn-delete-product').forEach(btn => btn.addEventListener('click', () => handleDeleteProduct(btn.dataset.productId)));
-            
-            document.querySelectorAll('.btn-edit-receivable').forEach(btn => btn.addEventListener('click', () => {
-                const receivable = state.receivables.find(r => r.id === btn.dataset.receivableId);
-                if(receivable) openModal(getEditReceivableForm(receivable), 'max-w-lg');
-            }));
-            document.querySelectorAll('.btn-delete-receivable').forEach(btn => btn.addEventListener('click', () => handleDeleteReceivable(btn.dataset.receivableId)));
-
-            document.querySelectorAll('.btn-edit-sale').forEach(btn => btn.addEventListener('click', () => showEditTransactionModal(btn.dataset.saleId, 'sale')));
-            document.querySelectorAll('.btn-delete-sale').forEach(btn => btn.addEventListener('click', () => handleDeleteTransaction(btn.dataset.saleId, 'sale')));
-            document.querySelectorAll('.btn-edit-quote').forEach(btn => btn.addEventListener('click', () => showEditTransactionModal(btn.dataset.quoteId, 'quote')));
-            document.querySelectorAll('.btn-delete-quote').forEach(btn => btn.addEventListener('click', () => handleDeleteTransaction(btn.dataset.quoteId, 'quote')));
-
-            document.querySelectorAll('.btn-convert-quote').forEach(btn => btn.addEventListener('click', () => {
-                state.quoteToConvert = state.quotes.find(q => q.id === btn.dataset.quoteId);
-                openModal(getTransactionForm('sale'), 'max-w-2xl');
-                if (state.quoteToConvert) {
-                    state.quoteToConvert.items.forEach(item => addTransactionItem(item.productId, item.quantity));
-                    document.getElementById('discount-percent').value = state.quoteToConvert.discountPercent || '';
-                    document.getElementById('discount-value').value = state.quoteToConvert.discountValue || '';
-                    updateTransactionTotal();
-                }
-            }));
-
-            document.getElementById('btn-new-user')?.addEventListener('click', () => showUserForm());
-            document.querySelectorAll('.btn-edit-user').forEach(btn => btn.addEventListener('click', () => showUserForm(state.users.find(u => u.id === btn.dataset.userId))));
-            document.querySelectorAll('.btn-delete-user').forEach(btn => btn.addEventListener('click', () => handleDeleteUser(btn.dataset.userId)));
-            
-            document.querySelectorAll('.btn-receive-order').forEach(btn => btn.addEventListener('click', () => handleReceivePurchaseOrder(btn.dataset.orderId)));
-            document.querySelectorAll('.btn-edit-order').forEach(btn => btn.addEventListener('click', () => showEditPurchaseOrderModal(btn.dataset.orderId)));
-            document.querySelectorAll('.btn-delete-order').forEach(btn => btn.addEventListener('click', () => handleDeletePurchaseOrder(btn.dataset.orderId)));
-            document.querySelectorAll('.btn-edit-expense').forEach(btn => btn.addEventListener('click', () => showEditExpenseModal(btn.dataset.expenseId)));
-            document.querySelectorAll('.btn-delete-expense').forEach(btn => btn.addEventListener('click', () => handleDeleteExpense(btn.dataset.expenseId)));
-            document.querySelectorAll('.btn-settle-expense').forEach(btn => btn.addEventListener('click', () => handleSettleExpense(btn.dataset.expenseId)));
-        }
-        
-        function showEditTransactionModal(id, type) {
-            const collection = type === 'sale' ? state.sales : state.quotes;
-            const transaction = collection.find(t => t.id === id);
-            if(transaction) {
-                openModal(getTransactionForm(type, transaction), 'max-w-2xl');
-                transaction.items.forEach(item => addTransactionItem(item.productId, item.quantity));
-                updateTransactionTotal();
-            }
-        }
-
-        function showEditPurchaseOrderModal(orderId) {
-            const order = state.purchaseOrders.find(o => o.id === orderId);
-            if (order) {
-                openModal(getPurchaseOrderForm(order), 'max-w-2xl');
-                order.items.forEach(item => addPurchaseItem(item.productId, item.quantity));
-                updatePurchaseTotal();
-            }
-        }
-        
-        function showEditExpenseModal(expenseId) {
-            const expense = state.expenses.find(e => e.id === expenseId);
-            if(expense) {
-                openModal(getExpenseForm(expense), 'max-w-lg');
-            }
-        }
-        
-        function showManageCategoriesModal(){
-            openModal(getManageCategoriesForm(), 'max-w-md');
-        }
-
-        function addTransactionItem(productId, quantity = 1) {
-            const product = state.products.find(p => p.id === productId);
-            if (!product || document.querySelector(`.transaction-item[data-product-id="${productId}"]`)) return;
-            const isSale = !!document.getElementById('form-sale');
-            if(isSale && product.quantity < quantity) { alert(`Estoque insuficiente para ${product.name}! Disponível: ${product.quantity}`); return; }
-            
-            const itemHtml = `<div class="transaction-item flex items-center space-x-2 p-2 bg-slate-50 rounded" data-product-id="${product.id}" data-price="${product.price}" data-product-name="${product.name}"><p class="flex-grow">${product.name}</p><input type="number" value="${quantity}" min="1" ${isSale ? `max="${product.quantity}"` : ''} class="w-20 text-center border rounded-md p-1 transaction-item-quantity"><p class="w-24 text-right font-semibold transaction-item-subtotal">R$ ${parseFloat(product.price * quantity).toFixed(2)}</p><button type="button" class="btn-remove-transaction-item text-red-500 hover:text-red-700 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>`;
-            document.getElementById('transaction-items-container').insertAdjacentHTML('beforeend', itemHtml);
-            updateTransactionTotal();
-            lucide.createIcons();
-        }
-        
-        function addPurchaseItem(productId, quantity = 1) {
-            const product = state.products.find(p => p.id === productId);
-            if (!product || document.querySelector(`.purchase-item[data-product-id="${productId}"]`)) return;
-
-             const itemHtml = `<div class="purchase-item flex items-center space-x-2 p-2 bg-slate-50 rounded" data-product-id="${product.id}" data-cost="${product.cost || 0}" data-product-name="${product.name}"><p class="flex-grow">${product.name}</p><input type="number" value="${quantity}" min="1" class="w-20 text-center border rounded-md p-1 purchase-item-quantity"><p class="w-24 text-right font-semibold purchase-item-subtotal">R$ ${parseFloat((product.cost || 0) * quantity).toFixed(2)}</p><button type="button" class="btn-remove-purchase-item text-red-500 hover:text-red-700 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>`;
-            document.getElementById('purchase-items-container').insertAdjacentHTML('beforeend', itemHtml);
-            updatePurchaseTotal();
-            lucide.createIcons();
-        }
-
-        function addModalEventListeners() {
-            document.getElementById('btn-cancel-modal')?.addEventListener('click', closeModal);
-            document.getElementById('form-client')?.addEventListener('submit', handleClientForm);
-            document.getElementById('form-product')?.addEventListener('submit', handleProductForm);
-            document.getElementById('form-sale')?.addEventListener('submit', (e) => handleTransaction(e, 'sale'));
-            document.getElementById('form-quote')?.addEventListener('submit', (e) => handleTransaction(e, 'quote'));
-            document.getElementById('form-user')?.addEventListener('submit', handleUserForm);
-            document.getElementById('form-purchase-order')?.addEventListener('submit', handlePurchaseOrderForm);
-            document.getElementById('form-expense')?.addEventListener('submit', handleExpenseForm);
-            document.getElementById('form-category')?.addEventListener('submit', handleCategoryForm);
-            document.getElementById('form-edit-receivable')?.addEventListener('submit', handleEditReceivable);
-            
-            document.querySelectorAll('.btn-delete-category').forEach(btn => btn.addEventListener('click', () => handleDeleteCategory(btn.dataset.id)));
-            
-            document.getElementById('btn-add-transaction-item')?.addEventListener('click', () => addTransactionItem(document.getElementById('select-product-to-add').value));
-            document.getElementById('btn-add-purchase-item')?.addEventListener('click', () => addPurchaseItem(document.getElementById('select-product-to-purchase').value));
-
-            
-            const transacContainer = document.getElementById('transaction-items-container');
-            transacContainer?.addEventListener('click', (e) => { if (e.target.closest('.btn-remove-transaction-item')) { e.target.closest('.transaction-item').remove(); updateTransactionTotal(); } });
-            transacContainer?.addEventListener('input', (e) => { if (e.target.classList.contains('transaction-item-quantity')) updateTransactionTotal(); });
-
-            const purchaseContainer = document.getElementById('purchase-items-container');
-            purchaseContainer?.addEventListener('click', (e) => { if (e.target.closest('.btn-remove-purchase-item')) { e.target.closest('.purchase-item').remove(); updatePurchaseTotal(); } });
-            purchaseContainer?.addEventListener('input', (e) => { if (e.target.classList.contains('purchase-item-quantity')) updatePurchaseTotal(); });
-
-            document.getElementById('discount-percent')?.addEventListener('input', (e) => { document.getElementById('discount-value').value = ''; updateTransactionTotal(); });
-            document.getElementById('discount-value')?.addEventListener('input', (e) => { document.getElementById('discount-percent').value = ''; updateTransactionTotal(); });
-            
-            const paymentMethodSelect = document.querySelector('select[name="paymentMethod"]');
-            if (paymentMethodSelect) {
-                const installmentsContainer = document.getElementById('installments-container');
-                paymentMethodSelect.addEventListener('change', () => {
-                    if (paymentMethodSelect.value === 'A Prazo') {
-                        installmentsContainer.classList.remove('hidden');
-                    } else {
-                        installmentsContainer.classList.add('hidden');
-                    }
-                });
-                if (paymentMethodSelect.value === 'A Prazo') installmentsContainer.classList.remove('hidden');
-            }
-        }
-        
-        function updateTransactionTotal() {
-            let subtotal = 0;
-            document.querySelectorAll('.transaction-item').forEach(item => {
-                const price = parseFloat(item.dataset.price);
-                const quantity = parseInt(item.querySelector('.transaction-item-quantity').value);
-                const itemSubtotal = price * quantity;
-                item.querySelector('.transaction-item-subtotal').textContent = `R$ ${itemSubtotal.toFixed(2)}`;
-                subtotal += itemSubtotal;
-            });
-            document.getElementById('transaction-subtotal').textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
-
-            const discountPercent = parseFloat(document.getElementById('discount-percent').value) || 0;
-            const discountValue = parseFloat(document.getElementById('discount-value').value) || 0;
-            const total = subtotal - (subtotal * (discountPercent / 100)) - discountValue;
-            document.getElementById('transaction-total').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
-        }
-        
-        function updatePurchaseTotal() {
-            let total = 0;
-            document.querySelectorAll('.purchase-item').forEach(item => {
-                const cost = parseFloat(item.dataset.cost);
-                const quantity = parseInt(item.querySelector('.purchase-item-quantity').value);
-                const itemSubtotal = cost * quantity;
-                item.querySelector('.purchase-item-subtotal').textContent = `R$ ${itemSubtotal.toFixed(2)}`;
-                total += itemSubtotal;
-            });
-            document.getElementById('purchase-total').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            alert(`${addedCount} novos clientes importados com sucesso! \n${skippedCount} clientes já existiam e foram ignorados.`);
+            importBtn.disabled = true;
+            importBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+            importBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
         }
 
     </script>

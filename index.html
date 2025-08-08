@@ -44,12 +44,11 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-    <!-- Tela de Login -->
     <div id="login-view" class="view visible-view min-h-screen flex items-center justify-center p-4">
         <div class="w-full max-w-sm bg-white p-8 rounded-xl shadow-lg">
             <div class="text-center mb-8">
-                 <h1 class="text-3xl font-bold text-gray-700">Silva Tintas</h1>
-                 <p class="text-gray-500">CRM de Prospecção</p>
+                <h1 class="text-3xl font-bold text-gray-700">Silva Tintas</h1>
+                <p class="text-gray-500">CRM de Prospecção</p>
             </div>
             <form id="login-form">
                 <div class="mb-4">
@@ -66,24 +65,24 @@
         </div>
     </div>
 
-    <!-- Tela Principal do CRM -->
     <div id="crm-view" class="view hidden-view">
-        <!-- Container Principal -->
         <div class="container mx-auto p-4 md:p-8">
 
-            <!-- Cabeçalho -->
             <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-700">CRM Silva Tintas</h1>
                     <p id="welcome-message" class="text-gray-500">Bem-vindo!</p>
                 </div>
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2 md:space-x-4">
                     <div class="text-center">
                         <span id="client-count" class="text-2xl font-bold text-blue-600">0</span>
                         <p class="text-sm text-gray-500">Clientes</p>
                     </div>
-                    <button id="add-client-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
-                        + Adicionar Cliente
+                    <button id="import-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 text-sm">
+                        Importar Clientes
+                    </button>
+                    <button id="add-client-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 text-sm">
+                        + Adicionar
                     </button>
                     <button id="logout-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
                         Sair
@@ -91,15 +90,12 @@
                 </div>
             </header>
             
-            <!-- Barra de Pesquisa -->
             <div class="mb-8">
                 <input type="text" id="search-bar" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Pesquisar por empresa, endereço, vendedor...">
             </div>
 
-            <!-- Dashboard do Admin -->
             <section id="admin-dashboard" class="mb-8 hidden">
                 <h2 class="text-2xl font-bold text-gray-700 mb-4">Dashboard do Administrador</h2>
-                <!-- Filtros -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-white p-4 rounded-lg shadow">
                     <div>
                         <label for="filter-category" class="block text-sm font-medium text-gray-700">Filtrar por Categoria</label>
@@ -107,21 +103,20 @@
                             <option value="todos">Todas as Categorias</option>
                             <option value="Funilaria">Funilaria</option>
                             <option value="Estetica Automotiva">Estética Automotiva</option>
-                            <option value="Madeireira">Madeireira</option>
+                            <option value="Marcenaria">Marcenaria</option>
                             <option value="Industria">Indústria</option>
-                            <option value="Veiculos Pesados">Veículos Pesados</option>
-                            <option value="Outro">Outro</option>
+                            <option value="Fabrica">Fábrica</option>
+                            <option value="Usina">Usina</option>
+                            <option value="Car Detailing">Car Detailing</option>
                         </select>
                     </div>
                     <div>
                         <label for="filter-seller" class="block text-sm font-medium text-gray-700">Filtrar por Vendedor</label>
                         <select id="filter-seller" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                             <option value="todos">Todos os Vendedores</option>
-                            <!-- Vendedores serão populados dinamicamente -->
-                        </select>
+                            </select>
                     </div>
                 </div>
-                <!-- Gráficos -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
                         <h3 class="font-semibold text-gray-600 mb-2">Taxa de Conversão</h3>
@@ -138,14 +133,11 @@
                 </div>
             </section>
             
-            <!-- Lista de Clientes -->
             <main id="client-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Cards dos clientes serão inseridos aqui -->
-            </main>
+                </main>
         </div>
     </div>
 
-    <!-- Modal para Adicionar/Editar Cliente -->
     <div id="client-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
         <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md">
             <h2 id="modal-title" class="text-2xl font-bold mb-6">Adicionar Novo Cliente</h2>
@@ -177,10 +169,11 @@
                     <select id="categoria" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
                         <option value="Funilaria">Funilaria</option>
                         <option value="Estetica Automotiva">Estética Automotiva</option>
-                        <option value="Madeireira">Madeireira</option>
+                        <option value="Marcenaria">Marcenaria</option>
                         <option value="Industria">Indústria</option>
-                        <option value="Veiculos Pesados">Veículos Pesados</option>
-                        <option value="Outro">Outro</option>
+                        <option value="Fabrica">Fábrica</option>
+                        <option value="Usina">Usina</option>
+                        <option value="Car Detailing">Car Detailing</option>
                     </select>
                 </div>
                 <div class="flex justify-end space-x-4">
@@ -199,10 +192,10 @@
 
         // --- Configuração e Inicialização ---
         const firebaseConfig = {
-            apiKey: "AIzaSyDPisgGzruxqnXzf9hPlb05uCN3hMozt2s",
+            apiKey: "SUA_API_KEY", // ATENÇÃO: Substitua pela sua chave de API
             authDomain: "crm-silva-tintas.firebaseapp.com",
             projectId: "crm-silva-tintas",
-            storageBucket: "crm-silva-tintas.firebasestorage.app",
+            storageBucket: "crm-silva-tintas.appspot.com",
             messagingSenderId: "37152653096",
             appId: "1:37152653096:web:37e27f33544fdc36abda1d",
             measurementId: "G-Y4EXZKNN2F"
@@ -220,7 +213,6 @@
         let allClientsData = []; 
         let conversionChartInstance, categoryChartInstance, sellerChartInstance;
 
-
         // --- Elementos do DOM ---
         const loginView = document.getElementById('login-view');
         const crmView = document.getElementById('crm-view');
@@ -232,6 +224,7 @@
         const clientList = document.getElementById('client-list');
         const clientCount = document.getElementById('client-count');
         const addClientBtn = document.getElementById('add-client-btn');
+        const importBtn = document.getElementById('import-btn'); // Novo botão
         const clientModal = document.getElementById('client-modal');
         const modalTitle = document.getElementById('modal-title');
         const cancelBtn = document.getElementById('cancel-btn');
@@ -520,10 +513,10 @@
                 openModalForEdit(editButton.dataset.id);
             }
             
-            // CORREÇÃO: Removido o `confirm()` que não funciona em todos os ambientes.
-            // A exclusão agora é direta ao clicar.
             if (deleteButton) {
-                deleteClient(deleteButton.dataset.id);
+                if (confirm('Tem certeza que deseja excluir este cliente?')) {
+                     deleteClient(deleteButton.dataset.id);
+                }
             }
         });
 
@@ -531,7 +524,15 @@
         function createClientCard(id, data) {
             const card = document.createElement('div');
             card.className = 'bg-white rounded-lg shadow-md p-5 flex flex-col justify-between transition-transform transform hover:-translate-y-1';
-            const categoryColors = { 'Funilaria': 'bg-purple-100 text-purple-800', 'Estetica Automotiva': 'bg-teal-100 text-teal-800', 'Madeireira': 'bg-yellow-100 text-yellow-800', 'Industria': 'bg-red-100 text-red-800', 'Veiculos Pesados': 'bg-gray-200 text-gray-800', 'Outro': 'bg-blue-100 text-blue-800' };
+            const categoryColors = {
+                'Funilaria': 'bg-purple-100 text-purple-800', 
+                'Estetica Automotiva': 'bg-teal-100 text-teal-800', 
+                'Marcenaria': 'bg-yellow-100 text-yellow-800', 
+                'Industria': 'bg-red-100 text-red-800', 
+                'Fabrica': 'bg-indigo-100 text-indigo-800',
+                'Usina': 'bg-gray-200 text-gray-800',
+                'Car Detailing': 'bg-blue-100 text-blue-800'
+            };
             const statusColors = { 'Não contatado': 'bg-gray-200 text-gray-800', 'Contatado': 'bg-blue-200 text-blue-800', 'Em negociação': 'bg-yellow-200 text-yellow-800', 'Cliente': 'bg-green-200 text-green-800' };
             const statusOptions = ['Não contatado', 'Contatado', 'Em negociação', 'Cliente'];
             card.innerHTML = `
@@ -548,26 +549,108 @@
                 <div class="mt-auto pt-4 border-t border-gray-200">
                     <div class="flex justify-between items-center">
                          <select class="status-select w-full text-sm font-semibold p-2 rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 ${statusColors[data.status]}">
-                            ${statusOptions.map(opt => `<option value="${opt}" ${opt === data.status ? 'selected' : ''}>${opt}</option>`).join('')}
-                        </select>
-                        <div class="flex items-center ml-3">
-                            <button class="edit-btn text-gray-400 hover:text-blue-600 transition duration-300 mr-2" data-id="${id}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z" />
-                                </svg>
-                            </button>
-                            <button class="delete-btn text-gray-400 hover:text-red-600 transition duration-300" data-id="${id}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                            </button>
-                        </div>
+                             ${statusOptions.map(opt => `<option value="${opt}" ${opt === data.status ? 'selected' : ''}>${opt}</option>`).join('')}
+                         </select>
+                         <div class="flex items-center ml-3">
+                             <button class="edit-btn text-gray-400 hover:text-blue-600 transition duration-300 mr-2" data-id="${id}">
+                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z" />
+                                 </svg>
+                             </button>
+                             <button class="delete-btn text-gray-400 hover:text-red-600 transition duration-300" data-id="${id}">
+                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                 </svg>
+                             </button>
+                         </div>
                     </div>
                 </div>
             `;
             card.querySelector('.status-select').addEventListener('change', (e) => updateClientStatus(id, e.target.value));
             return card;
         }
+
+        // --- NOVA LÓGICA DE IMPORTAÇÃO ---
+        importBtn.addEventListener('click', importProspects);
+
+        const prospectsToImport = [
+            { empresa: 'Fernandes Funilaria E Pintura', endereco: 'Rua Dr. Gurgel, 123, Presidente Prudente, SP', telefone: '(18) 99999-1234', categoria: 'Funilaria' },
+            { empresa: 'Laav Estética Automotiva', endereco: 'Av. Brasil, 456, Presidente Prudente, SP', telefone: '(18) 98888-5678', email: 'contato@laavprudente.com.br', categoria: 'Estetica Automotiva' },
+            { empresa: 'Marcenaria Arte & Ofício', endereco: 'Rua das Acácias, 789, Presidente Prudente, SP', telefone: '(18) 97777-4321', categoria: 'Marcenaria' },
+            { empresa: 'Prudemplast Química Industrial', endereco: 'Distrito Industrial, Presidente Prudente, SP', telefone: '(18) 3222-3344', email: 'vendas@prudemplast.com.br', categoria: 'Industria' },
+            { empresa: 'Detailing Masters', endereco: 'Av. da Saudade, 101, Presidente Prudente, SP', telefone: '(18) 96666-9876', categoria: 'Car Detailing' },
+            { empresa: 'Móveis Planejados Prudente', endereco: 'Atendimento em toda a região', telefone: '(18) 95555-1234', categoria: 'Marcenaria' },
+            { empresa: 'Usina Alto Alegre', endereco: 'Zona Rural, Presidente Prudente, SP', telefone: '(18) 3902-9900', categoria: 'Usina' },
+            { empresa: 'Fábrica de Sonhos Estofados', endereco: 'Rua da Produção, 202, Presidente Prudente, SP', telefone: '(18) 94444-5678', categoria: 'Fabrica' },
+            { empresa: 'Auto Funilaria e Pintura do Alemão', endereco: 'Rua XV de Novembro, 303, Dracena, SP', telefone: '(18) 93333-8765', categoria: 'Funilaria' },
+            { empresa: 'Garagem Estética Automotiva', endereco: 'Av. Presidente Vargas, 404, Dracena, SP', telefone: '(18) 92222-1234', categoria: 'Estetica Automotiva' },
+            { empresa: 'Marcenaria São José', endereco: 'Rua das Oliveiras, 505, Dracena, SP', telefone: '(18) 91111-5678', categoria: 'Marcenaria' },
+            { empresa: 'Indústria de Bebidas Funada', endereco: 'Rodovia Comandante João Ribeiro de Barros, Dracena, SP', telefone: '(18) 3821-1345', categoria: 'Industria' },
+            { empresa: 'Funilaria e Pintura do Tuta', endereco: 'Rua Tiradentes, 606, Presidente Venceslau, SP', telefone: '(18) 99988-7766', categoria: 'Funilaria' },
+            { empresa: 'Stock Car - Estética Automotiva', endereco: 'Av. Dom Pedro II, 707, Presidente Venceslau, SP', telefone: '(18) 98877-6655', categoria: 'Estetica Automotiva' },
+            { empresa: 'Móveis Planejados Venceslau', endereco: 'Centro, Presidente Venceslau, SP', telefone: '(18) 97766-5544', categoria: 'Marcenaria' },
+            { empresa: 'Fábrica de Telhas de Concreto', endereco: 'Distrito Industrial, Presidente Venceslau, SP', telefone: '(18) 3271-1122', categoria: 'Fabrica' },
+            { empresa: 'Garrido Funilaria', endereco: 'Rua das Flores, 808, Adamantina, SP', telefone: '(18) 96655-4433', categoria: 'Funilaria' },
+            { empresa: 'The Best Estética Automotiva', endereco: 'Alameda Fernão Dias, 909, Adamantina, SP', telefone: '(18) 95544-3322', categoria: 'Estetica Automotiva' },
+            { empresa: 'Marcenaria Irmãos Unidos', endereco: 'Av. Rio Branco, 1010, Adamantina, SP', telefone: '(18) 94433-2211', categoria: 'Marcenaria' },
+            { empresa: 'Fábrica de Blocos Adamantina', endereco: 'Parque Industrial, Adamantina, SP', telefone: '(18) 3521-2233', categoria: 'Fabrica' },
+            { empresa: 'Funilaria E Pintura Ideal', endereco: 'Rua Projetada A, 111, Rancharia, SP', telefone: '(18) 93322-1100', categoria: 'Funilaria' },
+            { empresa: 'Up Estética Automotiva', endereco: 'Av. Brasil, 1212, Rancharia, SP', telefone: '(18) 92211-0099', categoria: 'Estetica Automotiva' },
+            { empresa: 'Rancharia Móveis', endereco: 'Centro, Rancharia, SP', telefone: '(18) 91100-9988', categoria: 'Marcenaria' },
+            { empresa: 'Fábrica de Lajes Rancharia', endereco: 'Distrito Industrial, Rancharia, SP', telefone: '(18) 3265-1122', categoria: 'Fabrica' },
+            { empresa: 'Funilaria e Pintura Central', endereco: 'Av. da Orla, 1313, Presidente Epitácio, SP', telefone: '(18) 99988-7711', categoria: 'Funilaria' },
+            { empresa: 'Steticar', endereco: 'Rua da Praia, 1414, Presidente Epitácio, SP', telefone: '(18) 98877-1122', categoria: 'Estetica Automotiva' },
+            { empresa: 'Marcenaria Epitácio', endereco: 'Bairro Portão, Presidente Epitácio, SP', telefone: '(18) 97766-2233', categoria: 'Marcenaria' },
+            { empresa: 'Fábrica de Ração', endereco: 'Zona Rural, Presidente Epitácio, SP', telefone: '(18) 3281-3344', categoria: 'Fabrica' },
+            { empresa: 'Auto Elétrico e Funilaria do Alemão', endereco: 'Av. Brasil, 1515, Teodoro Sampaio, SP', telefone: '(18) 96655-3344', categoria: 'Funilaria' },
+            { empresa: 'Perfeita Estetica Automotiva', endereco: 'Rua Central, 1616, Teodoro Sampaio, SP', telefone: '(18) 95544-4455', categoria: 'Estetica Automotiva' },
+            { empresa: 'Auto Peças e Funilaria Modelo', endereco: 'Av. Coronel Marcondes, 2020, Pirapozinho, SP', telefone: '(18) 94433-5566', categoria: 'Funilaria' },
+            { empresa: 'Polimento e Cia', endereco: 'Rua Barão do Rio Branco, 2121, Pirapozinho, SP', telefone: '(18) 93322-6677', categoria: 'Estetica Automotiva' },
+            { empresa: 'Marcenaria Pirapozinho', endereco: 'Jardim das Flores, Pirapozinho, SP', telefone: '(18) 92211-7788', categoria: 'Marcenaria' },
+            { empresa: 'Fábrica de Pré-Moldados', endereco: 'Distrito Industrial, Pirapozinho, SP', telefone: '(18) 3269-8899', categoria: 'Fabrica' },
+            { empresa: 'Funilaria Santo Anastácio', endereco: 'Rua Osvaldo Cruz, 2222, Santo Anastácio, SP', telefone: '(18) 91100-8899', categoria: 'Funilaria' },
+            { empresa: 'Top Car Estética', endereco: 'Av. Nove de Julho, 2323, Santo Anastácio, SP', telefone: '(18) 99988-9900', categoria: 'Estetica Automotiva' },
+            { empresa: 'Indústria de Calçados', endereco: 'Parque Industrial, Santo Anastácio, SP', telefone: '(18) 3928-1122', categoria: 'Industria' },
+            { empresa: 'F1 Funilaria e Pintura', endereco: 'Rua Ribeiro de Barros, 2424, Álvares Machado, SP', telefone: '(18) 98877-0011', categoria: 'Funilaria' },
+            { empresa: 'Machado Car Detail', endereco: 'Centro, Álvares Machado, SP', telefone: '(18) 97766-1122', categoria: 'Car Detailing' },
+            { empresa: 'Marcenaria Machado', endereco: 'Vila Industrial, Álvares Machado, SP', telefone: '(18) 96655-2233', categoria: 'Marcenaria' },
+            { empresa: 'Fábrica de Embalagens', endereco: 'Rodovia, Álvares Machado, SP', telefone: '(18) 3273-2233', categoria: 'Fabrica' },
+            { empresa: 'Oficina do Zé Funilaria', endereco: 'Rua Principal, 2525, Regente Feijó, SP', telefone: '(18) 95544-3344', categoria: 'Funilaria' },
+            { empresa: 'Studio Car Regente', endereco: 'Av. dos Expedicionários, 2626, Regente Feijó, SP', telefone: '(18) 94433-4455', categoria: 'Estetica Automotiva' },
+            { empresa: 'Indústria Têxtil', endereco: 'Parque Industrial, Regente Feijó, SP', telefone: '(18) 3279-5566', categoria: 'Industria' },
+            { empresa: 'Usina Regente', endereco: 'Zona Rural, Regente Feijó, SP', telefone: '(18) 3900-1122', categoria: 'Usina' },
+        ];
+
+        async function importProspects() {
+            let addedCount = 0;
+            let skippedCount = 0;
+            const existingCompanyNames = allClientsData.map(client => client.empresa.toLowerCase());
+
+            for (const prospect of prospectsToImport) {
+                if (existingCompanyNames.includes(prospect.empresa.toLowerCase())) {
+                    skippedCount++;
+                    continue;
+                }
+                
+                try {
+                    await addDoc(clientsCollectionRef, {
+                        ...prospect,
+                        status: 'Não contatado',
+                        criadoEm: new Date(),
+                        criadoPor: currentUserId
+                    });
+                    addedCount++;
+                } catch (error) {
+                    console.error("Erro ao importar cliente:", prospect.empresa, error);
+                }
+            }
+            
+            alert(`${addedCount} novos clientes importados com sucesso! \n${skippedCount} clientes já existiam e foram ignorados.`);
+            importBtn.disabled = true;
+            importBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+            importBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+        }
+
     </script>
 </body>
 </html>

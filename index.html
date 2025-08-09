@@ -78,11 +78,8 @@
                         <span id="client-count" class="text-2xl font-bold text-blue-600">0</span>
                         <p class="text-sm text-gray-500">Clientes</p>
                     </div>
-                    <button id="import-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 text-sm">
-                        Importar Clientes
-                    </button>
                     <button id="add-client-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 text-sm">
-                        + Adicionar
+                        + Adicionar Cliente
                     </button>
                     <button id="logout-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
                         Sair
@@ -192,7 +189,6 @@
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
 
         // --- Configuração e Inicialização ---
-        // Suas credenciais do Firebase foram inseridas aqui
         const firebaseConfig = {
             apiKey: "AIzaSyDPisgGzruxqnXzf9hPlb05uCN3hMozt2s",
             authDomain: "crm-silva-tintas.firebaseapp.com",
@@ -227,7 +223,6 @@
         const clientList = document.getElementById('client-list');
         const clientCount = document.getElementById('client-count');
         const addClientBtn = document.getElementById('add-client-btn');
-        const importBtn = document.getElementById('import-btn'); // Novo botão
         const clientModal = document.getElementById('client-modal');
         const modalTitle = document.getElementById('modal-title');
         const cancelBtn = document.getElementById('cancel-btn');
@@ -572,88 +567,6 @@
             card.querySelector('.status-select').addEventListener('change', (e) => updateClientStatus(id, e.target.value));
             return card;
         }
-
-        // --- LÓGICA DE IMPORTAÇÃO ---
-        importBtn.addEventListener('click', importProspects);
-
-        const prospectsToImport = [
-            { empresa: 'Fernandes Funilaria E Pintura', endereco: 'Rua Dr. Gurgel, 123, Presidente Prudente, SP', telefone: '(18) 99999-1234', categoria: 'Funilaria' },
-            { empresa: 'Laav Estética Automotiva', endereco: 'Av. Brasil, 456, Presidente Prudente, SP', telefone: '(18) 98888-5678', email: 'contato@laavprudente.com.br', categoria: 'Estetica Automotiva' },
-            { empresa: 'Marcenaria Arte & Ofício', endereco: 'Rua das Acácias, 789, Presidente Prudente, SP', telefone: '(18) 97777-4321', categoria: 'Marcenaria' },
-            { empresa: 'Prudemplast Química Industrial', endereco: 'Distrito Industrial, Presidente Prudente, SP', telefone: '(18) 3222-3344', email: 'vendas@prudemplast.com.br', categoria: 'Industria' },
-            { empresa: 'Detailing Masters', endereco: 'Av. da Saudade, 101, Presidente Prudente, SP', telefone: '(18) 96666-9876', categoria: 'Car Detailing' },
-            { empresa: 'Móveis Planejados Prudente', endereco: 'Atendimento em toda a região', telefone: '(18) 95555-1234', categoria: 'Marcenaria' },
-            { empresa: 'Usina Alto Alegre', endereco: 'Zona Rural, Presidente Prudente, SP', telefone: '(18) 3902-9900', categoria: 'Usina' },
-            { empresa: 'Fábrica de Sonhos Estofados', endereco: 'Rua da Produção, 202, Presidente Prudente, SP', telefone: '(18) 94444-5678', categoria: 'Fabrica' },
-            { empresa: 'Auto Funilaria e Pintura do Alemão', endereco: 'Rua XV de Novembro, 303, Dracena, SP', telefone: '(18) 93333-8765', categoria: 'Funilaria' },
-            { empresa: 'Garagem Estética Automotiva', endereco: 'Av. Presidente Vargas, 404, Dracena, SP', telefone: '(18) 92222-1234', categoria: 'Estetica Automotiva' },
-            { empresa: 'Marcenaria São José', endereco: 'Rua das Oliveiras, 505, Dracena, SP', telefone: '(18) 91111-5678', categoria: 'Marcenaria' },
-            { empresa: 'Indústria de Bebidas Funada', endereco: 'Rodovia Comandante João Ribeiro de Barros, Dracena, SP', telefone: '(18) 3821-1345', categoria: 'Industria' },
-            { empresa: 'Funilaria e Pintura do Tuta', endereco: 'Rua Tiradentes, 606, Presidente Venceslau, SP', telefone: '(18) 99988-7766', categoria: 'Funilaria' },
-            { empresa: 'Stock Car - Estética Automotiva', endereco: 'Av. Dom Pedro II, 707, Presidente Venceslau, SP', telefone: '(18) 98877-6655', categoria: 'Estetica Automotiva' },
-            { empresa: 'Móveis Planejados Venceslau', endereco: 'Centro, Presidente Venceslau, SP', telefone: '(18) 97766-5544', categoria: 'Marcenaria' },
-            { empresa: 'Fábrica de Telhas de Concreto', endereco: 'Distrito Industrial, Presidente Venceslau, SP', telefone: '(18) 3271-1122', categoria: 'Fabrica' },
-            { empresa: 'Garrido Funilaria', endereco: 'Rua das Flores, 808, Adamantina, SP', telefone: '(18) 96655-4433', categoria: 'Funilaria' },
-            { empresa: 'The Best Estética Automotiva', endereco: 'Alameda Fernão Dias, 909, Adamantina, SP', telefone: '(18) 95544-3322', categoria: 'Estetica Automotiva' },
-            { empresa: 'Marcenaria Irmãos Unidos', endereco: 'Av. Rio Branco, 1010, Adamantina, SP', telefone: '(18) 94433-2211', categoria: 'Marcenaria' },
-            { empresa: 'Fábrica de Blocos Adamantina', endereco: 'Parque Industrial, Adamantina, SP', telefone: '(18) 3521-2233', categoria: 'Fabrica' },
-            { empresa: 'Funilaria E Pintura Ideal', endereco: 'Rua Projetada A, 111, Rancharia, SP', telefone: '(18) 93322-1100', categoria: 'Funilaria' },
-            { empresa: 'Up Estética Automotiva', endereco: 'Av. Brasil, 1212, Rancharia, SP', telefone: '(18) 92211-0099', categoria: 'Estetica Automotiva' },
-            { empresa: 'Rancharia Móveis', endereco: 'Centro, Rancharia, SP', telefone: '(18) 91100-9988', categoria: 'Marcenaria' },
-            { empresa: 'Fábrica de Lajes Rancharia', endereco: 'Distrito Industrial, Rancharia, SP', telefone: '(18) 3265-1122', categoria: 'Fabrica' },
-            { empresa: 'Funilaria e Pintura Central', endereco: 'Av. da Orla, 1313, Presidente Epitácio, SP', telefone: '(18) 99988-7711', categoria: 'Funilaria' },
-            { empresa: 'Steticar', endereco: 'Rua da Praia, 1414, Presidente Epitácio, SP', telefone: '(18) 98877-1122', categoria: 'Estetica Automotiva' },
-            { empresa: 'Marcenaria Epitácio', endereco: 'Bairro Portão, Presidente Epitácio, SP', telefone: '(18) 97766-2233', categoria: 'Marcenaria' },
-            { empresa: 'Fábrica de Ração', endereco: 'Zona Rural, Presidente Epitácio, SP', telefone: '(18) 3281-3344', categoria: 'Fabrica' },
-            { empresa: 'Auto Elétrico e Funilaria do Alemão', endereco: 'Av. Brasil, 1515, Teodoro Sampaio, SP', telefone: '(18) 96655-3344', categoria: 'Funilaria' },
-            { empresa: 'Perfeita Estetica Automotiva', endereco: 'Rua Central, 1616, Teodoro Sampaio, SP', telefone: '(18) 95544-4455', categoria: 'Estetica Automotiva' },
-            { empresa: 'Auto Peças e Funilaria Modelo', endereco: 'Av. Coronel Marcondes, 2020, Pirapozinho, SP', telefone: '(18) 94433-5566', categoria: 'Funilaria' },
-            { empresa: 'Polimento e Cia', endereco: 'Rua Barão do Rio Branco, 2121, Pirapozinho, SP', telefone: '(18) 93322-6677', categoria: 'Estetica Automotiva' },
-            { empresa: 'Marcenaria Pirapozinho', endereco: 'Jardim das Flores, Pirapozinho, SP', telefone: '(18) 92211-7788', categoria: 'Marcenaria' },
-            { empresa: 'Fábrica de Pré-Moldados', endereco: 'Distrito Industrial, Pirapozinho, SP', telefone: '(18) 3269-8899', categoria: 'Fabrica' },
-            { empresa: 'Funilaria Santo Anastácio', endereco: 'Rua Osvaldo Cruz, 2222, Santo Anastácio, SP', telefone: '(18) 91100-8899', categoria: 'Funilaria' },
-            { empresa: 'Top Car Estética', endereco: 'Av. Nove de Julho, 2323, Santo Anastácio, SP', telefone: '(18) 99988-9900', categoria: 'Estetica Automotiva' },
-            { empresa: 'Indústria de Calçados', endereco: 'Parque Industrial, Santo Anastácio, SP', telefone: '(18) 3928-1122', categoria: 'Industria' },
-            { empresa: 'F1 Funilaria e Pintura', endereco: 'Rua Ribeiro de Barros, 2424, Álvares Machado, SP', telefone: '(18) 98877-0011', categoria: 'Funilaria' },
-            { empresa: 'Machado Car Detail', endereco: 'Centro, Álvares Machado, SP', telefone: '(18) 97766-1122', categoria: 'Car Detailing' },
-            { empresa: 'Marcenaria Machado', endereco: 'Vila Industrial, Álvares Machado, SP', telefone: '(18) 96655-2233', categoria: 'Marcenaria' },
-            { empresa: 'Fábrica de Embalagens', endereco: 'Rodovia, Álvares Machado, SP', telefone: '(18) 3273-2233', categoria: 'Fabrica' },
-            { empresa: 'Oficina do Zé Funilaria', endereco: 'Rua Principal, 2525, Regente Feijó, SP', telefone: '(18) 95544-3344', categoria: 'Funilaria' },
-            { empresa: 'Studio Car Regente', endereco: 'Av. dos Expedicionários, 2626, Regente Feijó, SP', telefone: '(18) 94433-4455', categoria: 'Estetica Automotiva' },
-            { empresa: 'Indústria Têxtil', endereco: 'Parque Industrial, Regente Feijó, SP', telefone: '(18) 3279-5566', categoria: 'Industria' },
-            { empresa: 'Usina Regente', endereco: 'Zona Rural, Regente Feijó, SP', telefone: '(18) 3900-1122', categoria: 'Usina' },
-        ];
-
-        async function importProspects() {
-            let addedCount = 0;
-            let skippedCount = 0;
-            const existingCompanyNames = allClientsData.map(client => client.empresa.toLowerCase());
-
-            for (const prospect of prospectsToImport) {
-                if (existingCompanyNames.includes(prospect.empresa.toLowerCase())) {
-                    skippedCount++;
-                    continue;
-                }
-                
-                try {
-                    await addDoc(clientsCollectionRef, {
-                        ...prospect,
-                        status: 'Não contatado',
-                        criadoEm: new Date(),
-                        criadoPor: currentUserId
-                    });
-                    addedCount++;
-                } catch (error) {
-                    console.error("Erro ao importar cliente:", prospect.empresa, error);
-                }
-            }
-            
-            alert(`${addedCount} novos clientes importados com sucesso! \n${skippedCount} clientes já existiam e foram ignorados.`);
-            importBtn.disabled = true;
-            importBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
-            importBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
-        }
-
     </script>
 </body>
 </html>
